@@ -12,3 +12,9 @@ For information on how to get started with the cybersecurity toolkit, see the fo
    - For the DomainProfilingSamples and HostProfilingSamples application, run `ant`
    - For the PredictiveBlacklistingSamples application, run `ant -Dspss.toolkit.path=<path_to_spss_toolkit>`
  3. Submit the job! (the *.sab file can be found in the `output` directory)
+
+To learn more about Streams:
+* [IBM Streams on Github](http://ibmstreams.github.io)
+* [Introduction to Streams Quick Start Edition](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/qse-intro/)
+* [Streams Getting Started Guide](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/qse-getting-started/)
+* [StreamsDev](https://developer.ibm.com/streamsdev/)
