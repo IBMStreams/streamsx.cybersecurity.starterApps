@@ -106,31 +106,6 @@ composite DomainProfilingBasic
 					quoteStrings : false ;
 			}
 
-		() as MetricsSink_12 = MetricsSink(DomainProfilingOp_Stream)
-			{
-				logic
-					state : 
-					{
-						mutable int64 benignCnt = 0ul;
-						mutable int64 suspiciousCnt = 0ul;
-					}
-					onTuple DomainProfilingOp_Stream:
-					{
-						if(DomainProfilingOp_Stream.predictedClass == "benign")
-						{
-							benignCnt++;
-						}
-						else
-						{
-							suspiciousCnt++;
-						}
-					}
-				param
-					metrics : benignCnt, suspiciousCnt ;
-					names : "nBenignDomains", "nSuspiciousDomains";
-					initialValues : 0l, 0l;
-			}
-
 	}
 
 	composite DPSrcBasic(output DNSMsgParser_Stream )
@@ -150,7 +125,7 @@ composite DomainProfilingBasic
 			}
 
 			(stream<PacketType> PktFileSrc_Stream) as PktFileSrc =
-				PacketFileSource(DirScan_Stream, Beacon_11_out0)
+				PacketFileSource(DirScan_Stream)
 			{
 				param
 					inputFilter : $filterExpression ;
@@ -172,21 +147,6 @@ composite DomainProfilingBasic
 					DNSMsgParser_Stream : questionName = DNS_QUESTION_NAME(), responseCode =
 						DNS_RESPONSE_CODE(), answerData = DNS_ANSWER_DATA(), additionalData =
 						DNS_ADDITIONAL_DATA() ;
-			}
-
-			(stream<rstring filename> Beacon_11_out0) as Beacon_11 = Beacon()
-			{
-				logic
-					state :
-					{
-						mutable int32 stateVariable = 0 ;
-					}
-
-				param
-					period : 8.0 ;
-				output
-					Beacon_11_out0 : filename =
-						"/home/streamsadmin/git/samples/cybersecurity/DomainProfilingSamples/data/domain_profiling_sample.pcap" ;
 			}
 
 	}
