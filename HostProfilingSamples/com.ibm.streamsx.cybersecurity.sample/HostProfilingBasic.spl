@@ -143,7 +143,7 @@ composite HostProfilingBasic
 			{
 				param
 					messageAttribute : dnsMessage ;
-					outputFilters : DNS_RESPONSE_FLAG() && ! parseError() ;
+					outputFilters : DNS_RESPONSE_FLAG() && DNS_RESPONSE_CODE() != 0ub && ! parseError() ;
 				output
 					DNSMsgParser_Stream : questionName = DNS_QUESTION_NAME(), responseCode =
 						DNS_RESPONSE_CODE(), answerData = DNS_ANSWER_DATA(), additionalData =
