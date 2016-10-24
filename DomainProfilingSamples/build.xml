@@ -26,7 +26,7 @@
 	<property name="sample.maincomp.basic" value="DomainProfilingBasic" />
 	<property name="sample.maincomp.extended" value="DomainProfilingExtended" />
 
-	<target name="all" depends="downloadNetworkToolkit,compile" />
+	<target name="all" depends="downloadNetworkToolkit,compileAll" />
 
 	<target name="indexToolkit">
 		<exec executable="${streams.install}/bin/spl-make-toolkit">
@@ -35,14 +35,29 @@
 		</exec>
 	</target>
 
+    <target name="compileAll" depends="indexToolkit">
+        <antcall target="compile">
+            <param name="mainComp" value="DomainProfilingBasic" />
+        </antcall>
+        <antcall target="compile">
+            <param name="mainComp" value="DomainProfilingExtended" />
+        </antcall>
+        <antcall target="compile">
+            <param name="mainComp" value="DomainProfilingListInput" />
+        </antcall>
+        <antcall target="compile">
+            <param name="mainComp" value="DomainProfilingQRadar" />
+        </antcall>
+    </target>
+
 	<target name="compile" depends="indexToolkit">
-		<echo message="Compiling application..." />
+		<echo message="Compiling ${mainComp} application..." />
 		<exec executable="${streams.install}/bin/sc">
 			<arg value="-M" />
-			<arg value="${sample.namespace}::${sample.maincomp.basic}" />
+			<arg value="${sample.namespace}::${mainComp}" />
 			<arg value="-t" />
 			<arg value="${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${network.toolkit.install.dir}/com.ibm.streamsx.network" />
-			<arg value="--output-dir=output/${sample.maincomp.basic}_Output" />
+			<arg value="--output-dir=output/${mainComp}_Output" />
 			<arg value="--data-dir=data" />
 		</exec>
 	</target>
@@ -125,13 +140,8 @@
 			<arg value="." />
 		</exec>		
 	
-		<exec executable="${streams.install}/bin/sc" >
-		    <arg value="-M" />
-		    <arg value="${sample.namespace}::${sample.maincomp.basic}" />
-		    <arg value="--output-dir=output/${sample.maincomp.basic}_Output" />
-			<arg value="-C" />
-		</exec>
-	
+        <delete dir="output" />
+
 		<!-- remove maxmind files -->
 		<delete>
 			<fileset dir="${data.dir}">

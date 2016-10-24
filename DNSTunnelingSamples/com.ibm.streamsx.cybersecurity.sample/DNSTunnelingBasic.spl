@@ -1,0 +1,51 @@
+namespace com.ibm.streamsx.cybersecurity.sample;
+
+use com.ibm.streams.cybersecurity.analytics::DNSTunneling ;
+use com.ibm.streams.cybersecurity.types::* ;
+use com.ibm.streamsx.network.source::* ;
+use com.ibm.streamsx.network.parse::* ;
+   
+composite DNSTunnelingBasic
+{
+	graph
+		stream<blob dnsMessage> DNSPacketMessageStream = PacketFileSource()
+		{
+			param
+				pcapFilename : getThisToolkitDir() + "/etc/dnstunneling.pcap" ;
+				inputFilter : "udp port 53" ; // filter out non-dns traffic
+				metricsInterval : 0.0 ;
+			output
+				DNSPacketMessageStream : dnsMessage = PAYLOAD_DATA() ;
+		}
+
+		stream<DNSTunnelingInput_t> FullDNSResponseStream =
+			DNSMessageParser(DNSPacketMessageStream)
+		{
+			param
+				messageAttribute : dnsMessage ;
+				outputFilters : ! parseError() && DNS_RESPONSE_FLAG() && DNS_QUESTION_TYPE() == 16uh;
+			output
+				FullDNSResponseStream : questionName = DNS_QUESTION_NAME(), questionType =
+					DNS_QUESTION_TYPE(), answerData = DNS_ANSWER_DATA(),
+					answerTypes = DNS_ANSWER_TYPES();
+		}
+
+		(stream<tuple<rstring domain>, DNSTunnelingResult_t> TunnelledDomains) as DNSTunnelingOp =
+			DNSTunneling(FullDNSResponseStream)
+		{
+			output
+				TunnelledDomains : domain = questionName, predictedClass = getPredictedClass(), predictedClasses =
+					getPredictedClasses(), suspiciousText = getSuspiciousText(), benignText =
+					getBenignText(), suspiciousCount = getSuspiciousCount(), benignCount =
+					getBenignCount() ;
+		}
+
+		() as FileSink_3 = FileSink(TunnelledDomains)
+		{
+			param
+				file : "output.txt" ;
+				flush : 1u ;
+		}
+
+}
+

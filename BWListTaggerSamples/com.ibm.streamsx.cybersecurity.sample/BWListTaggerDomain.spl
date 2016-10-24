@@ -1,0 +1,39 @@
+namespace com.ibm.streamsx.cybersecurity.sample ;
+
+use com.ibm.streams.cybersecurity.tagging::BWListTagger ;
+use com.ibm.streams.cybersecurity.types::* ;
+use com.ibm.streamsx.network.ipv4::* ;
+
+composite BWListTaggerDomain
+{
+	graph
+		(stream<Domain domains, rstring extra> SrcStream) as
+			SrcOp = FileSource()
+		{
+			param
+				file : "input_doms.txt" ;
+			output
+				SrcStream : extra = "abcdef" ;
+		}
+
+		(stream<Domain domains, rstring extra, BWListTag_e domainTags>
+			TaggedStream) as BWTaggerOp = BWListTagger(SrcStream
+			as inPort0Alias)
+		{
+			param
+				domainAttr : domains;
+				blackIPFile : "bwlist/IPBlackList.txt" ;
+				whiteIPFile : "bwlist/IPWhiteList.txt" ;
+				blackDomainFile : "bwlist/DomainsBlackList.txt" ;
+				whiteDomainFile : "bwlist/DomainsWhiteList.txt" ;
+			output
+				TaggedStream : domainTags = getDomainTags()[0];
+		}
+
+		() as Printer = Custom(TaggedStream as inPort0Alias)
+		{
+			logic
+				onTuple inPort0Alias : println(inPort0Alias) ;
+		}
+
+}

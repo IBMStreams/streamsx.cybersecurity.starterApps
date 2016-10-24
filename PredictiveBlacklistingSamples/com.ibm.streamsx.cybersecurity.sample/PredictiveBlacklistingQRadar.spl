@@ -11,7 +11,7 @@ use com.ibm.streamsx.network.ipv4::* ;
 use com.ibm.streamsx.network.enrichment::IPLocationMatrix_t ;
 use com.ibm.streams.cybersecurity.adapters::QRadarSink ;
 
-composite PredictiveBlacklistingBasic
+composite PredictiveBlacklistingQRadar
 {
 	graph
 		(stream<PBDNSResponseMessage_t, tuple<BWListTag_e domainTags,
@@ -102,7 +102,7 @@ composite PredictiveBlacklistingBasic
 						featureVector = getFeatureVector() ;
 			}
 
-		(stream<PBDNSResponseMessage_t> PBSrcOp_Stream) as PBSrcOp = PBSrc()
+		(stream<PBDNSResponseMessage_t> PBSrcOp_Stream) as PBSrcOp = PBQRadarSrc()
 			{
 				param
 					directory : dataDirectory() ;
@@ -121,31 +121,24 @@ composite PredictiveBlacklistingBasic
 			}
 
 		(stream<PredictiveBlacklisting_t, PBFeatureExtractorInput_t>
-			Suspicious_Stream ; stream<PredictiveBlacklisting_t,
-			PBFeatureExtractorInput_t> Benign_Stream) as PredictionFilter =
+			Suspicious_Stream) as PredictionFilter =
 				Filter(PredictiveBlacklistingOp_Stream)
 			{
 				param
 					filter : predictedClass == "suspicious" ;
 			}
 
-		() as SuspiciousSink = FileSink(Suspicious_Stream)
+		() as QRadarSink_11 = QRadarSink(Suspicious_Stream)
 			{
 				param
-					file : "pbresults_suspicious.csv" ;
-					format : csv ;
-			}
-
-		() as BenignSink = FileSink(Benign_Stream)
-			{
-				param
-					file : "pbresults_benign.csv" ;
-					format : csv ;
+					host : getSubmissionTimeValue("qradar.host") + ":" +
+						getSubmissionTimeValue("qradar.port") ;
+					eventID : "PREDICTIVE_BLACKLISTING_DOMAIN_DISCOVERED" ;
 			}
 
 	}
 
-	composite PBSrc(output DNSMsgParser_Stream )
+	composite PBQRadarSrc(output DNSMsgParser_Stream )
 	{
 		param
 			expression<rstring> $directory ;

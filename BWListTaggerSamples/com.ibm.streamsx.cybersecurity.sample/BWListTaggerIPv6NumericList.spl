@@ -1,0 +1,53 @@
+namespace com.ibm.streamsx.cybersecurity.sample ;
+
+use com.ibm.streams.cybersecurity.tagging::BWListTagger ;
+use com.ibm.streams.cybersecurity.types::* ;
+use com.ibm.streamsx.network.ipv4::* ;
+
+composite BWListTaggerIPv6NumericList
+{
+	graph
+		(stream<list<rstring> ips, rstring extra> SrcStream) as
+			SrcOp = FileSource()
+		{
+			param
+				file : "input_ipv6_vec.txt" ;
+			output
+				SrcStream : extra = "abcdef" ;
+		}
+
+		(stream<list<IPv6> ips, rstring extra> IPStrToNumStream) as IPStrToNumOp =
+			Functor(SrcStream)
+		{
+			output
+				IPStrToNumStream : ips = convertIPV6AddressStringsToNumerics(ips) ;
+		}
+
+		(stream<list<IPv6> ips, rstring extra, list<BWListTag_e> ipTags>
+			TaggedStream) as BWTaggerOp = BWListTagger(IPStrToNumStream
+			as inPort0Alias)
+		{
+			param
+				ipAttr : ips ;
+				blackIPFile : "bwlist/IPBlackList.txt" ;
+				whiteIPFile : "bwlist/IPWhiteList.txt" ;
+				blackDomainFile : "bwlist/DomainsBlackList.txt" ;
+				whiteDomainFile : "bwlist/DomainsWhiteList.txt" ;
+			output
+				TaggedStream : ipTags = getIPTags() ;
+		}
+
+		() as Printer = Custom(IPNumToStrStream as inPort0Alias)
+		{
+			logic
+				onTuple inPort0Alias : println(inPort0Alias) ;
+		}
+
+		(stream<list<rstring> ips, rstring extra, list<BWListTag_e> ipTags>
+			IPNumToStrStream) as IPNumToStrOp = Functor(TaggedStream)
+		{
+			output
+				IPNumToStrStream : ips = convertIPV6AddressNumericsToStrings(ips) ;
+		}
+
+}

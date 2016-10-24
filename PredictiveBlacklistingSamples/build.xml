@@ -28,7 +28,7 @@
 
 	<fail message="Property &quot;spss.toolkit.path&quot; need to be set to the absolute path containing the 'com.ibm.spss.streams.analytics' toolkit" unless="spss.toolkit.path" />
 
-	<target name="all" depends="downloadNetworkToolkit,updateMaxMindGeoIP,updateMaxMindASN,compile" />
+	<target name="all" depends="downloadNetworkToolkit,updateMaxMindGeoIP,updateMaxMindASN,compileAll" />
 
 	<target name="indexToolkit">
 		<exec executable="${streams.install}/bin/spl-make-toolkit">
@@ -37,17 +37,26 @@
 		</exec>
 	</target>
 
-	<target name="compile" depends="indexToolkit">
-		<echo message="Compiling application..." />
-		<exec executable="${streams.install}/bin/sc">
-			<arg value="-M" />
-			<arg value="${sample.namespace}::${sample.maincomp.basic}" />
-			<arg value="-t" />
-			<arg value="${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${network.toolkit.install.dir}/com.ibm.streamsx.network:${spss.toolkit.path}" />
-			<arg value="--output-dir=output/${sample.maincomp.basic}_Output" />
-			<arg value="--data-dir=data" />
-		</exec>
-	</target>
+    <target name="compileAll" depends="indexToolkit">
+        <antcall target="compile">
+            <param name="mainComp" value="PredictiveBlacklistingBasic" />
+        </antcall>
+        <antcall target="compile">
+            <param name="mainComp" value="PredictiveBlacklistingQRadar" />
+        </antcall>
+    </target>
+
+    <target name="compile" depends="indexToolkit">
+        <echo message="Compiling ${mainComp} application..." />
+        <exec executable="${streams.install}/bin/sc">
+            <arg value="-M" />
+            <arg value="${sample.namespace}::${mainComp}" />
+            <arg value="-t" />
+            <arg value="${spss.toolkit.path}:${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${network.toolkit.install.dir}/com.ibm.streamsx.network" />
+            <arg value="--output-dir=output/${mainComp}_Output" />
+            <arg value="--data-dir=data" />
+        </exec>
+    </target>
 
 	<target name="downloadNetworkToolkit">
 		<echo message="Downloading com.ibm.streamsx.network toolkit..." />
@@ -127,13 +136,8 @@
 			<arg value="." />
 		</exec>		
 	
-		<exec executable="${streams.install}/bin/sc" >
-		    <arg value="-M" />
-		    <arg value="${sample.namespace}::${sample.maincomp.basic}" />
-		    <arg value="--output-dir=output/${sample.maincomp.basic}_Output" />
-			<arg value="-C" />
-		</exec>
-	
+        <delete dir="output" />
+
 		<!-- remove maxmind files -->
 		<delete>
 			<fileset dir="${data.dir}">

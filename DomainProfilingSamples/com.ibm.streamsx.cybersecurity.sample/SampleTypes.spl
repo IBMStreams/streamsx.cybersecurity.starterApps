@@ -5,7 +5,7 @@ use com.ibm.streamsx.network.enrichment::* ;
 type 
 	PacketType =
         timestamp captureTime,          // time that packet was captured, in seconds since Unix epoch 
-        rstring dstAddress,             // string representation of IP destination address
+        uint32 dstAddress,             // string representation of IP destination address
         blob dnsMessage;                // the DNS message from a packet, excluding all network headers
 
 type		
