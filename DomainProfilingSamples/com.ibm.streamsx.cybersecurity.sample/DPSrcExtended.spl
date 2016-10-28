@@ -1,0 +1,49 @@
+namespace com.ibm.streamsx.cybersecurity.sample ;
+
+use com.ibm.streamsx.network.parse::* ;
+use com.ibm.streamsx.network.source::* ;
+use com.ibm.streams.cybersecurity.types::* ;
+
+composite DPSrcExtended(output DNSMsgParser_Stream )
+{
+	param
+		expression<rstring> $directory ;
+		expression<rstring> $pattern : "" ;
+		expression<rstring> $filterExpression : "udp port 53" ;
+		expression<float64> $initDelay : 0f ;
+	graph
+		(stream<rstring filename> DirScan_Stream) as DirScan = DirectoryScan()
+		{
+			param
+				directory : $directory ;
+				pattern : $pattern ;
+				initDelay : $initDelay ;
+		}
+
+		(stream<PacketType> PktFileSrc_Stream) as PktFileSrc =
+			PacketFileSource(DirScan_Stream)
+		{
+			param
+				inputFilter : $filterExpression ;
+				metricsInterval : 0.0 ;
+			output
+				PktFileSrc_Stream : captureTime = createTimestamp((int64)
+					CAPTURE_SECONDS(), CAPTURE_MICROSECONDS() * 1000u), dstAddress =
+					IPV4_DST_ADDRESS(), dnsMessage =
+					PAYLOAD_DATA() ;
+		}
+
+		(stream<DPDNSResponseMessage_t> DNSMsgParser_Stream) as DNSMsgParser =
+			DNSMessageParser(PktFileSrc_Stream)
+		{
+			param
+				messageAttribute : dnsMessage ;
+				outputFilters : DNS_RESPONSE_FLAG() && ! parseError() ;
+			output
+				DNSMsgParser_Stream : questionName = DNS_QUESTION_NAME(), responseCode =
+					DNS_RESPONSE_CODE() ;
+		}
+
+}
+
+

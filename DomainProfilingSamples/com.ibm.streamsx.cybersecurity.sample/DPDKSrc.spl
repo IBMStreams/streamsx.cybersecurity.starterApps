@@ -1,0 +1,39 @@
+namespace com.ibm.streamsx.cybersecurity.sample ;
+
+use com.ibm.streamsx.network.source::PacketDPDKSource ;
+use com.ibm.streamsx.network.parse::DNSMessageParser ;
+
+public composite DPDKSrc(output Out0 )
+{
+	graph
+		(stream<PacketType> PacketDPDKSource_1_out0) as PacketDPDKSource_1 =
+			PacketDPDKSource()
+		{
+			param
+                coreMask: "0x3";
+                lcore   : 1;
+                nicPort : 0;
+                nicQueue: 0;
+                promiscuous: true;
+			output PacketDPDKSource_1_out0:
+				captureTime = createTimestamp((int64)
+					CAPTURE_SECONDS(), CAPTURE_MICROSECONDS() * 1000u), dstAddress =
+					IPV4_DST_ADDRESS(), dnsMessage = PAYLOAD_DATA() ;
+		}
+
+		(stream<DPDNSResponseMessage_t> Out0) as DNSMsgParser =
+			DNSMessageParser(PacketDPDKSource_1_out0)
+		{
+			param
+				messageAttribute : dnsMessage ;
+				outputFilters : DNS_RESPONSE_FLAG() && ! parseError() ;
+			output
+				Out0 : questionName = DNS_QUESTION_NAME(), responseCode =
+					DNS_RESPONSE_CODE(), answerDataIPv4 = DNS_ANSWER_IPV4_ADDRESSES(),
+					additionalData = DNS_ADDITIONAL_DATA() ;
+		}
+
+}
+
+
+

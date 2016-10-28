@@ -5,20 +5,8 @@ use com.ibm.streamsx.network.enrichment::* ;
 type 
 	PacketType =
         timestamp captureTime,          // time that packet was captured, in seconds since Unix epoch 
-        rstring dstAddress,             // string representation of IP destination address
+        uint32 dstAddress,             // string representation of IP destination address
         blob dnsMessage;                // the DNS message from a packet, excluding all network headers
-
-type		
-    HeaderType =
-	    timestamp captureTime,            // time that packet was captured, in seconds since Unix epoch
-	    rstring etherSrcAddressString,
-	    rstring etherDstAddressString,
-	    uint16 etherProtocol,
-	    rstring srcAddress,
-	    uint16 srcPort,
-	    rstring dstAddress,
-	    uint16 dstPort,
-	    blob rawPacket ;                        // contents of packet, including all headers
 	    
 type
 	IPASNInfoVector_t = list<IPASNInfo_t>;

@@ -23,8 +23,6 @@
 	<property name="network.toolkit.install.dir" value="${com.ibm.streamsx.cybersecurity.samples.DIR}/../" />
 
 	<property name="sample.namespace" value="com.ibm.streamsx.cybersecurity.sample" />
-	<property name="sample.maincomp.basic" value="HostProfilingBasic" />
-	<property name="sample.maincomp.extended" value="HostProfilingExtended" />
 
 	<target name="all" depends="downloadNetworkToolkit,compileAll" />
 
@@ -37,30 +35,21 @@
 
     <target name="compileAll" depends="indexToolkit">
         <antcall target="compile">
-            <param name="mainComp" value="HostProfilingBasic" />
-        </antcall>
-        <antcall target="compile">
-            <param name="mainComp" value="HostProfilingExtended" />
-        </antcall>
-        <antcall target="compile">
-            <param name="mainComp" value="HostProfilingListInput" />
-        </antcall>
-        <antcall target="compile">
-            <param name="mainComp" value="HostProfilingQRadar" />
+            <param name="mainComp" value="DNSTunnelingBasic" />
         </antcall>
     </target>
 
-    <target name="compile" depends="indexToolkit">
-        <echo message="Compiling ${mainComp} application..." />
-        <exec executable="${streams.install}/bin/sc">
-            <arg value="-M" />
-            <arg value="${sample.namespace}::${mainComp}" />
-            <arg value="-t" />
-            <arg value="${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${network.toolkit.install.dir}/com.ibm.streamsx.network" />
-            <arg value="--output-dir=output/${mainComp}_Output" />
-            <arg value="--data-dir=data" />
-        </exec>
-    </target>
+	<target name="compile" depends="indexToolkit">
+		<echo message="Compiling ${mainComp} application..." />
+		<exec executable="${streams.install}/bin/sc">
+			<arg value="-M" />
+			<arg value="${sample.namespace}::${mainComp}" />
+			<arg value="-t" />
+			<arg value="${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${network.toolkit.install.dir}/com.ibm.streamsx.network" />
+			<arg value="--output-dir=output/${mainComp}_Output" />
+			<arg value="--data-dir=data" />
+		</exec>
+	</target>
 
 	<target name="downloadNetworkToolkit">
 		<echo message="Downloading com.ibm.streamsx.network toolkit..." />
@@ -96,42 +85,6 @@
 		<echo message="Finished with com.ibm.streamsx.network toolkit!" />
 	</target>
 
-	<target name="updateMaxMindGeoIP">
-		<!-- download GeoLite2 CSV database -->
-		<get src="${maxmind.geolite2.url}" dest="${data.dir}/${maxmind.geolite2.file}" verbose="true" usetimestamp="true" />
-		
-		<!-- extract database files into maxmind data directory -->
-		<unzip src="${data.dir}/${maxmind.geolite2.file}" dest="${maxmind.geo.dir}">
-			<patternset>
-				<include name="**/GeoLite2-City-Blocks-IPv4.csv" />
-				<include name="**/GeoLite2-City-Blocks-IPv6.csv" />
-				<include name="**/GeoLite2-City-Locations-en.csv" />
-			</patternset>
-			<mapper type="flatten" />
-		</unzip>
-	</target>
-
-	<target name="updateMaxMindASN">
-		<!-- download GeoLite ASN & GeoLite ASN IPv6 CSV databases -->
-		<get src="${maxmind.asn.ipv4.url}" dest="${data.dir}/${maxmind.asn.ipv4.file}" verbose="true" usetimestamp="true" />
-		<get src="${maxmind.asn.ipv6.url}" dest="${data.dir}/${maxmind.asn.ipv6.file}" verbose="true" usetimestamp="true" />
-
-		<!-- extract CSV databases -->
-		<unzip src="${data.dir}/${maxmind.asn.ipv4.file}" dest="${maxmind.asn.dir}">
-			<patternset>
-				<include name="**/GeoIPASNum2.csv" />
-			</patternset>
-			<mapper type="flatten" />
-		</unzip>
-		
-			<unzip src="${data.dir}/${maxmind.asn.ipv6.file}" dest="${maxmind.asn.dir}">
-				<patternset>
-					<include name="**/GeoIPASNum2v6.csv" />
-				</patternset>
-				<mapper type="flatten" />
-			</unzip>		
-	</target>
-
 	<target name="clean">
 		<!-- clean toolkit index -->
 		<exec executable="${streams.install}/bin/spl-make-toolkit">
@@ -140,18 +93,8 @@
 			<arg value="." />
 		</exec>		
 	
-        <delete dir="output" />
+        	<delete dir="output" />
 
-		<!-- remove maxmind files -->
-		<delete>
-			<fileset dir="${data.dir}">
-				<include name="GeoIPASNum2.zip"/>
-				<include name="GeoIPASNum2v6.zip"/>
-				<include name="GeoLite2-City-CSV.zip"/>
-				<include name="maxmind/geo/*.csv"/>
-				<include name="maxmind/asn/*.csv"/>
-			</fileset>
-		</delete>
 	</target>
 
 </project>

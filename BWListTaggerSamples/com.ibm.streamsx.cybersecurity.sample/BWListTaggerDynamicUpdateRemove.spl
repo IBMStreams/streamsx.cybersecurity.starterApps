@@ -1,0 +1,76 @@
+namespace com.ibm.streamsx.cybersecurity.sample ;
+
+use com.ibm.streams.cybersecurity.tagging::BWListTagger ;
+use com.ibm.streams.cybersecurity.types::* ;
+use com.ibm.streams.cybersecurity.types::BWListUpdate_t ;
+
+composite BWListTaggerDynamicUpdateRemove
+{
+	graph
+		(stream<rstring domains, rstring extra> SrcStream) as SrcOp = FileSource()
+		{
+			param
+				file : "input_doms.txt" ;
+			output
+				SrcStream : extra = "abcdef" ;
+		}
+
+		(stream<rstring domains, rstring extra, BWListTag_e domainTags> TaggedStream)
+			as BWTaggerOp = BWListTagger(SrcStream2, SrcStream as
+			inPort0Alias ; UpdateSrcStream as inPort1Alias)
+		{
+			param
+				domainAttr : domains ;
+				blackIPFile : "bwlist/IPBlackList.txt" ;
+				whiteIPFile : "bwlist/IPWhiteList.txt" ;
+				blackDomainFile : "bwlist/DomainsBlackList.txt" ;
+				whiteDomainFile : "bwlist/DomainsWhiteList.txt" ;
+			output
+				TaggedStream : domainTags = getDomainTags()[0] ;
+		}
+
+		(stream<rstring domains, rstring extra> SrcStream2) as SrcOp2 = FileSource()
+		{
+			param
+				file : "input_doms.txt" ;
+				initDelay : 10f ;
+			output
+				SrcStream2 : extra = "abcdef" ;
+		}
+
+		(stream<rstring filename> DirScanStream) as DirScanOp = DirectoryScan()
+		{
+			param
+				initDelay : 5f;
+				directory : "bwlist_remove" ;
+		}
+
+		(stream<BWListUpdate_t> UpdateSrcStream) as UpdateSrcOp =
+			FileSource(DirScanStream)
+		{
+			logic
+				state :
+				{
+					mutable rstring filename_ ;
+				}
+
+				onTuple DirScanStream :
+				{
+					filename_ = DirScanStream.filename ;
+					println("Removing domains from file: " + filename_);
+				}
+
+			output
+				UpdateSrcStream : action = remove, // "remove" the domains from either the blacklist or whitelist
+				listTag =(size(regexMatch(filename_, "BlackList")) > 0) ? blackList
+					:((size(regexMatch(filename_, "WhiteList")) > 0) ? whiteList :
+					nonMatched) ;
+		}
+
+		() as Printer = Custom(TaggedStream as inPort0Alias)
+		{
+			logic
+				onTuple inPort0Alias : println(inPort0Alias) ;
+		}
+
+}

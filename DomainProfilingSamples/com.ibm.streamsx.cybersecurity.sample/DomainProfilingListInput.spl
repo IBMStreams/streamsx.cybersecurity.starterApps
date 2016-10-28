@@ -1,5 +1,7 @@
 namespace com.ibm.streamsx.cybersecurity.sample ;
 
+use com.ibm.streamsx.network.parse::* ;
+use com.ibm.streamsx.network.source::* ;
 use com.ibm.streamsx.network.ipv4::* ;
 use com.ibm.streamsx.network.enrichment::* ;
 use com.ibm.streams.cybersecurity.types::* ;
@@ -8,7 +10,7 @@ use com.ibm.streams.cybersecurity.analytics::* ;
 use com.ibm.streams.cybersecurity.types::DomainProfilingInput_t ;
 use com.ibm.streams.cybersecurity.types::DomainProfilingResult_t ;
 
-composite DomainProfilingBasic
+composite DomainProfilingListInput
 {
 	graph
 		(stream<DomainProfilingInput_t> BWTaggerOp_Stream) as BWTaggerOp =
@@ -28,14 +30,12 @@ composite DomainProfilingBasic
 			Filter(BWTaggerOp_Stream)
 		{
 			param
-				filter : bwTag != whiteList;
+				filter : bwTag != whiteList ;
 		}
 
 		(stream<DomainProfilingResult_t> DomainProfilingOp_Stream) as
-			DomainProfilingOp = DomainProfiling(DomainProfilingInput_Stream)
+			DomainProfilingOp = DomainProfiling(AggregateStream as inPort0Alias)
 		{
-			window
-				DomainProfilingInput_Stream : tumbling, time(20.0), partitioned ;
 			param
 				warmupFile : "etc/DomainProfilingWarmup.txt" ;
 			output
@@ -74,6 +74,18 @@ composite DomainProfilingBasic
 				format : csv ;
 				quoteStrings : false ;
 		}
+
+		(stream<list<DomainProfilingInput_t> dpInputs> AggregateStream) as
+			AggregateOp = Aggregate(DomainProfilingInput_Stream as inPort0Alias)
+		{
+			window
+				inPort0Alias : tumbling, time(20.0), partitioned ;
+			param
+				partitionBy : questionName ;
+			output
+				AggregateStream : dpInputs = Collect(inPort0Alias) ;
+		}
+
 }
 
 

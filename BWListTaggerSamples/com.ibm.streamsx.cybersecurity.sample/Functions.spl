@@ -1,0 +1,57 @@
+namespace com.ibm.streamsx.cybersecurity.sample;
+
+use com.ibm.streamsx.network.ipv6::* ;
+use com.ibm.streamsx.network.ipv4::* ;
+
+type
+	IPv4 = uint32;
+
+type
+	IPv6 = list<uint8>[16];
+	
+type
+	Domain = rstring;
+
+list<IPv6> convertIPV6AddressStringsToNumerics(list<rstring> addresses)
+{
+	mutable list<IPv6> ipList = [ ] ;
+	for(rstring ip in addresses)
+	{
+		appendM(ipList, convertIPV6AddressStringToNumeric(ip)) ;
+	}
+
+	return ipList ;
+}
+
+list<rstring> convertIPV6AddressNumericsToStrings(list<IPv6> addresses)
+{
+	mutable list<rstring> strList = [ ] ;
+	for(IPv6 ip in addresses)
+	{
+		appendM(strList, convertIPV6AddressNumericToString(ip)) ;
+	}
+
+	return strList ;
+}
+
+list<IPv4> convertIPV4AddressStringsToNumerics(list<rstring> addresses)
+{
+	mutable list<IPv4> ipList = [ ];
+	for(rstring ip in addresses) 
+	{
+		appendM(ipList, convertIPV4AddressStringToNumeric(ip));
+	}
+	
+	return ipList;
+}
+
+list<rstring> convertIPV4AddressNumericsToStrings(list<IPv4> addresses)
+{
+	mutable list<rstring> strList = [ ];
+	for(uint32 ip in addresses)
+	{
+		appendM(strList, convertIPV4AddressNumericToString(ip));
+	} 
+	
+	return strList;
+}

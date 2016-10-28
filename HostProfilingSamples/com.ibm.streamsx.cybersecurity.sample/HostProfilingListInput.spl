@@ -11,11 +11,8 @@ use com.ibm.streams.cybersecurity.types::HPDNSResponseMessage_t ;
 use com.ibm.streamsx.network.source::PacketFileSource ;
 use com.ibm.streamsx.network.parse::DNSMessageParser ;
 
-composite HostProfilingExtended
+composite HostProfilingListInput
 {
-	type
-		HostProfilingExtendedResult_t = HostProfilingResult_t,
-			tuple<set<rstring> uniqueDomains> ;
 	graph
 		(stream<HostProfilingInput_t> BWTaggerOp_Stream) as BWTaggerOp =
 			BWListTagger(HPSrcOp_Stream)
@@ -37,9 +34,8 @@ composite HostProfilingExtended
 				filter : bwTag != whiteList ;
 		}
 
-		(stream<HostProfilingExtendedResult_t,
-			tuple<list<HostProfilingInput_t> windowedTuples>> HostProfilingOp_Stream) as
-			HostProfilingOp = HostProfiling(DomainProfilingInput_Stream as inPort0Alias)
+		(stream<HostProfilingResult_t> HostProfilingOp_Stream) as HostProfilingOp =
+			HostProfiling(DomainProfilingInput_Stream as inPort0Alias)
 		{
 			window
 				inPort0Alias : tumbling, time(20.0), partitioned ;
@@ -48,19 +44,19 @@ composite HostProfilingExtended
 			output
 				HostProfilingOp_Stream : featureVector = getFeatureVector(), host =
 					getHost(), profileLastUpdate = getProfileLastUpdate(), predictedClass =
-					getPredictedClass(), windowedTuples = getWindowedTuples() ;
+					getPredictedClass() ;
 		}
 
-		(stream<HPDNSResponseMessage_t> HPSrcOp_Stream) as HPSrcOp = HPSrcExtended()
+		(stream<HPDNSResponseMessage_t> HPSrcOp_Stream) as HPSrcOp = HPSrc()
 		{
 			param
 				directory : dataDirectory() ;
 				pattern : "host_profiling_sample.pcap" ;
 		}
 
-		(stream<HostProfilingExtendedResult_t> Suspicious_Stream ;
-			stream<HostProfilingExtendedResult_t> Benign_Stream) as PredictionFilter =
-			Filter(ExtendedData_Stream as inputStream)
+		(stream<HostProfilingResult_t> Suspicious_Stream ;
+			stream<HostProfilingResult_t> Benign_Stream) as PredictionFilter =
+			Filter(HostProfilingOp_Stream as inputStream)
 		{
 			param
 				filter : predictedClass == "suspicious" ;
@@ -69,7 +65,7 @@ composite HostProfilingExtended
 		() as SuspiciousSink = FileSink(Suspicious_Stream as inPort0Alias)
 		{
 			param
-				file : "hpresults_ext_suspicious.csv" ;
+				file : "hpresults_suspicious.csv" ;
 				format : csv ;
 				quoteStrings : false ;
 		}
@@ -77,35 +73,14 @@ composite HostProfilingExtended
 		() as BenignSink = FileSink(Benign_Stream)
 		{
 			param
-				file : "hpresults_ext_benign.csv" ;
+				file : "hpresults_benign.csv" ;
 				format : csv ;
 				quoteStrings : false ;
 		}
 
-		(stream<HostProfilingExtendedResult_t> ExtendedData_Stream) as ExtendedData =
-			Custom(HostProfilingOp_Stream as inPort0Alias)
-		{
-			logic
-				onTuple inPort0Alias :
-				{
-					mutable set<rstring> uniqueDomains_ = { } ;
-					mutable HostProfilingExtendedResult_t
-						outTuple_ =(HostProfilingExtendedResult_t) { } ;
-					assignFrom(outTuple_, HostProfilingOp_Stream) ;
-					for(HostProfilingInput_t dpi in HostProfilingOp_Stream.windowedTuples)
-					{
-						insertM(uniqueDomains_, dpi.questionName) ;
-					}
-
-					outTuple_.uniqueDomains = uniqueDomains_ ;
-					submit(outTuple_, ExtendedData_Stream) ;
-				}
-
-		}
-
 }
 
-composite HPSrcExtended(output DNSMsgParser_Stream )
+composite HPSrcList(output DNSMsgParser_Stream )
 {
 	param
 		expression<rstring> $directory ;
@@ -129,7 +104,8 @@ composite HPSrcExtended(output DNSMsgParser_Stream )
 				metricsInterval : 0.0 ;
 			output
 				PktFileSrc_Stream : captureTime = createTimestamp((int64)
-					CAPTURE_SECONDS(), CAPTURE_MICROSECONDS() * 1000u), dstAddress = IPV4_DST_ADDRESS(), dnsMessage =
+					CAPTURE_SECONDS(), CAPTURE_MICROSECONDS() * 1000u), dstAddress =
+					convertIPV4AddressNumericToString(IPV4_DST_ADDRESS()), dnsMessage =
 					PAYLOAD_DATA() ;
 		}
 
