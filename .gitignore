@@ -1,3 +1,6 @@
 */.settings
 */toolkit.xml
 */.toolkitList
+/com.ibm.streamsx.network.zip
+/com.ibm.streamsx.network/
+
