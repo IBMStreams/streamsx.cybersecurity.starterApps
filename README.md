@@ -2,7 +2,7 @@
 (Incubation) Starter applications for IBM Streams cybersecurity toolkit
 
 ## Cybersecurity Toolkit v2.0.0
-The Cybersecurity Toolkit v2.0.0 is now available in IBM Streams v4.2. Application developers should review the [http://ibmstreams.github.io/streamsx.documentation/docs/4.2/cybersecurity/cybersecurity-v2-migration-guide/](Cybersecurity Toolkit Migration Guide) to **migrate** any existing applications to use the new version of the toolkit. 
+The Cybersecurity Toolkit v2.0.0 is now available in IBM Streams v4.2. Application developers should review the [Cybersecurity Toolkit Migration Guide](http://ibmstreams.github.io/streamsx.documentation/docs/4.2/cybersecurity/cybersecurity-v2-migration-guide/) to **migrate** any existing applications to use the new version of the toolkit. 
 
 
 ## Cybersecurity Toolkit - Getting Started
