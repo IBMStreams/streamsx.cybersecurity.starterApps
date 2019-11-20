@@ -1,13 +1,10 @@
 # streamsx.cybersecurity.starterApps
-(Incubation) Starter applications for IBM Streams cybersecurity toolkit
+Starter applications for IBM Streams cybersecurity toolkit
 
-## Cybersecurity Toolkit v2.0.0
-The Cybersecurity Toolkit v2.0.0 is now available in IBM Streams v4.2. Application developers should review the [http://ibmstreams.github.io/streamsx.documentation/docs/4.2/cybersecurity/cybersecurity-v2-migration-guide/](Cybersecurity Toolkit Migration Guide) to **migrate** any existing applications to use the new version of the toolkit. 
+These sample applications are compatible with Streams 4.3 and later.
+You can build and run the samples with local Streams or with Streams in Cloud Pak for Data.
 
-
-## Cybersecurity Toolkit - Getting Started
-For information on how to get started with the cybersecurity toolkit, see the following link:
-[http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/)
+For Streams 4.2 use version 1.0 of the samples: [https://github.com/IBMStreams/streamsx.cybersecurity.starterApps/tree/v1.0.0](Samples for Streams 4.2)
 
 ## Quick Start
 
@@ -16,6 +13,10 @@ For information on how to get started with the cybersecurity toolkit, see the fo
    - For the BWListTaggerSamples, DomainProfilingSamples, DNSTunnelingSamples and HostProfilingSamples application, run `ant`
    - For the PredictiveBlacklistingSamples application, run `ant -Dspss.toolkit.path=<path_to_spss_toolkit>`
  3. Submit the job! (the *.sab file can be found in the `output` directory)
+
+## Cybersecurity Toolkit - Getting Started
+For information on how to get started with the cybersecurity toolkit, see the following link:
+[http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/)
 
 To learn more about Streams:
 * [IBM Streams on Github](http://ibmstreams.github.io)
