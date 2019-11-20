@@ -11,7 +11,7 @@ use com.ibm.streams.cybersecurity.types::HPDNSResponseMessage_t ;
 use com.ibm.streamsx.network.source::PacketFileSource ;
 use com.ibm.streamsx.network.parse::DNSMessageParser ;
 
-composite HostProfilingBasic
+public composite HostProfilingBasic
 {
 	graph
 		(stream<HostProfilingInput_t> BWTaggerOp_Stream) as BWTaggerOp =
@@ -19,10 +19,10 @@ composite HostProfilingBasic
 		{
 			param
 				domainAttr : questionName ;
-				blackDomainFile : "bwlist/domainBlackList.txt" ;
-				blackIPFile : "bwlist/ipBlackList.txt" ;
-				whiteDomainFile : "bwlist/domainWhiteList.txt" ;
-				whiteIPFile : "bwlist/ipWhiteList.txt" ;
+				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlackList.txt" ;
+				blackIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlackList.txt" ;
+				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/domainWhiteList.txt" ;
+				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/ipWhiteList.txt" ;
 			output
 				BWTaggerOp_Stream : bwTag = getDomainTags()[0] ;
 		}
@@ -40,7 +40,7 @@ composite HostProfilingBasic
 			window
 				inPort0Alias : tumbling, time(20.0), partitioned ;
 			param
-				warmupFile : "etc/HostProfilingWarmup.txt" ;
+				warmupFile : getThisToolkitDir() + "/etc/HostProfilingWarmup.txt" ;
 			output
 				HostProfilingOp_Stream : featureVector = getFeatureVector(), host =
 					getHost(), profileLastUpdate = getProfileLastUpdate(), predictedClass =
@@ -50,7 +50,7 @@ composite HostProfilingBasic
 		(stream<HPDNSResponseMessage_t> HPSrcOp_Stream) as HPSrcOp = HPSrc()
 		{
 			param
-				directory : dataDirectory() ;
+				directory : getThisToolkitDir() + "/opt/" ;
 				pattern : "host_profiling_sample.pcap" ;
 		}
 
@@ -62,20 +62,16 @@ composite HostProfilingBasic
 				filter : predictedClass == "suspicious" ;
 		}
 
-		() as SuspiciousSink = FileSink(Suspicious_Stream as inPort0Alias)
+		() as PrinterSuspiciousSink = Custom(Suspicious_Stream as I)
 		{
-			param
-				file : "hpresults_suspicious.csv" ;
-				format : csv ;
-				quoteStrings : false ;
+			logic
+				onTuple I : println(I) ;
 		}
 
-		() as BenignSink = FileSink(Benign_Stream)
+		() as PrinterBenignSink = Custom(Benign_Stream as I)
 		{
-			param
-				file : "hpresults_benign.csv" ;
-				format : csv ;
-				quoteStrings : false ;
+			logic
+				onTuple I : println(I) ;
 		}
 
 }

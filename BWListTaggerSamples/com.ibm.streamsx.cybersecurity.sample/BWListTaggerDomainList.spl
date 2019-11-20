@@ -4,14 +4,14 @@ use com.ibm.streams.cybersecurity.tagging::BWListTagger ;
 use com.ibm.streams.cybersecurity.types::* ;
 use com.ibm.streamsx.network.ipv4::* ;
 
-composite BWListTaggerDomainList
+public composite BWListTaggerDomainList
 {
 	graph
 		(stream<list<Domain> domains, rstring extra> SrcStream) as
 			SrcOp = FileSource()
 		{
 			param
-				file : "input_doms_vec.txt" ;
+				file : getThisToolkitDir() + "/opt/input_doms_vec.txt" ;
 			output
 				SrcStream : extra = "abcdef" ;
 		}
@@ -22,10 +22,10 @@ composite BWListTaggerDomainList
 		{
 			param
 				domainAttr : domains;
-				blackIPFile : "bwlist/IPBlackList.txt" ;
-				whiteIPFile : "bwlist/IPWhiteList.txt" ;
-				blackDomainFile : "bwlist/DomainsBlackList.txt" ;
-				whiteDomainFile : "bwlist/DomainsWhiteList.txt" ;
+				blackIPFile : getThisToolkitDir() + "/opt/bwlist/IPBlackList.txt" ;
+				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/IPWhiteList.txt" ;
+				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsBlackList.txt" ;
+				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsWhiteList.txt" ;
 			output
 				TaggedStream : domainTags = getDomainTags();
 		}

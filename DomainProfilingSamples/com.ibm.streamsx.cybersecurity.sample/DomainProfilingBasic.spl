@@ -8,7 +8,7 @@ use com.ibm.streams.cybersecurity.analytics::* ;
 use com.ibm.streams.cybersecurity.types::DomainProfilingInput_t ;
 use com.ibm.streams.cybersecurity.types::DomainProfilingResult_t ;
 
-composite DomainProfilingBasic
+public composite DomainProfilingBasic
 {
 	graph
 		(stream<DomainProfilingInput_t> BWTaggerOp_Stream) as BWTaggerOp =
@@ -16,10 +16,10 @@ composite DomainProfilingBasic
 		{
 			param
 				domainAttr : questionName ;
-				blackDomainFile : "bwlist/domainBlackList.txt" ;
-				blackIPFile : "bwlist/ipBlackList.txt" ;
-				whiteDomainFile : "bwlist/domainWhiteList.txt" ;
-				whiteIPFile : "bwlist/ipWhiteList.txt" ;
+				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlackList.txt" ;
+				blackIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlackList.txt" ;
+				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/domainWhiteList.txt" ;
+				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/ipWhiteList.txt" ;
 			output
 				BWTaggerOp_Stream : bwTag = getDomainTags()[0] ;
 		}
@@ -37,7 +37,7 @@ composite DomainProfilingBasic
 			window
 				DomainProfilingInput_Stream : tumbling, time(20.0), partitioned ;
 			param
-				warmupFile : "etc/DomainProfilingWarmup.txt" ;
+				warmupFile : getThisToolkitDir() + "/etc/DomainProfilingWarmup.txt" ;
 			output
 				DomainProfilingOp_Stream : domain = getDomain(), profileLastUpdate =
 					getProfileLastUpdate(), predictedClass = getPredictedClass(),
@@ -47,17 +47,10 @@ composite DomainProfilingBasic
 		(stream<DPDNSResponseMessage_t> DPSrcOp_Stream) as DPSrcOp = DPSrc()
 		{
 			param
-				directory : dataDirectory() ;
+				directory : getThisToolkitDir() + "/opt/" ;
 				pattern : "domain_profiling_sample.pcap" ;
 		}
 
-		() as SuspiciousSink = FileSink(Suspicious_Stream as inPort0Alias)
-		{
-			param
-				file : "dpresults_suspicious.csv" ;
-				format : csv ;
-				quoteStrings : false ;
-		}
 
 		(stream<DomainProfilingResult_t> Suspicious_Stream ;
 			stream<DomainProfilingResult_t> Benign_Stream) as PredictionFilter =
@@ -67,12 +60,16 @@ composite DomainProfilingBasic
 				filter : predictedClass == "suspicious" ;
 		}
 
-		() as BenignSink = FileSink(Benign_Stream)
-		{
-			param
-				file : "dpresults_benign.csv" ;
-				format : csv ;
-				quoteStrings : false ;
+		stream<rstring result> Result = Custom(Benign_Stream as I; Suspicious_Stream as J){
+			logic
+				onTuple I : {
+					printStringLn((rstring)I);
+					submit ({result=""}, Result);
+				}
+				onTuple J : {
+					printStringLn((rstring)J);
+					submit ({result=""}, Result);
+				}
 		}
 }
 

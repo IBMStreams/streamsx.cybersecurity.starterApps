@@ -9,9 +9,8 @@ use com.ibm.streamsx.network.parse::* ;
 use com.ibm.streamsx.network.source::* ;
 use com.ibm.streamsx.network.ipv4::* ;
 use com.ibm.streamsx.network.enrichment::IPLocationMatrix_t ;
-use com.ibm.streams.cybersecurity.adapters::QRadarSink ;
 
-composite PredictiveBlacklistingBasic
+public composite PredictiveBlacklistingBasic
 {
 	graph
 		(stream<PBDNSResponseMessage_t, tuple<BWListTag_e domainTags,
@@ -21,10 +20,10 @@ composite PredictiveBlacklistingBasic
 			param
 				domainAttr : questionName ;
 				ipAttr : concat(answerData, additionalData) ;
-				blackDomainFile : "bwlist/domainBlackList.txt" ;
-				blackIPFile : "bwlist/ipBlackList.txt" ;
-				whiteDomainFile : "bwlist/domainWhiteList.txt" ;
-				whiteIPFile : "bwlist/ipWhiteList.txt" ;
+				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlackList.txt" ;
+				blackIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlackList.txt" ;
+				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/domainWhiteList.txt" ;
+				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/ipWhiteList.txt" ;
 			output
 				BWTagger_Stream : domainTags = getDomainTags()[0], ipTags = getIPTags() ;
 		}
@@ -64,9 +63,9 @@ composite PredictiveBlacklistingBasic
 			{
 				param
 					inputIPAttr :(list<list<rstring>>) [ answerData, additionalData ] ;
-					blocksIPv4File : "maxmind/geo/GeoLite2-City-Blocks-IPv4.csv" ;
-					blocksIPv6File : "maxmind/geo/GeoLite2-City-Blocks-IPv6.csv" ;
-					locationFile : "maxmind/geo/GeoLite2-City-Locations-en.csv" ;
+					blocksIPv4File : getThisToolkitDir() + "/opt/maxmind/geo/GeoLite2-City-Blocks-IPv4.csv" ;
+					blocksIPv6File : getThisToolkitDir() + "/opt/maxmind/geo/GeoLite2-City-Blocks-IPv6.csv" ;
+					locationFile : getThisToolkitDir() + "/opt/maxmind/geo/GeoLite2-City-Locations-en.csv" ;
 				output
 					IPSpatialEnricherOp_Stream : spatialInfoMatrix = getIPLocationData() ;
 			}
@@ -78,8 +77,8 @@ composite PredictiveBlacklistingBasic
 			{
 				param
 					inputIPAttr :(list<list<rstring>>) [ answerData, additionalData ] ;
-					asnIPv4File : "maxmind/asn/GeoIPASNum2.csv" ;
-					asnIPv6File : "maxmind/asn/GeoIPASNum2v6.csv" ;
+					asnIPv4File : getThisToolkitDir() + "/opt/maxmind/asn/GeoIPASNum2.csv" ;
+					asnIPv6File : getThisToolkitDir() + "/opt/maxmind/asn/GeoIPASNum2v6.csv" ;
 				output
 					IPASNEnricherOp_Stream : asnInfoMatrix = getASNInfo() ;
 			}
@@ -105,7 +104,7 @@ composite PredictiveBlacklistingBasic
 		(stream<PBDNSResponseMessage_t> PBSrcOp_Stream) as PBSrcOp = PBSrc()
 			{
 				param
-					directory : dataDirectory() ;
+					directory : getThisToolkitDir() + "/opt/" ;
 					pattern : "predictive_blacklisting_sample.pcap" ;
 			}
 
@@ -129,19 +128,17 @@ composite PredictiveBlacklistingBasic
 					filter : predictedClass == "suspicious" ;
 			}
 
-		() as SuspiciousSink = FileSink(Suspicious_Stream)
-			{
-				param
-					file : "pbresults_suspicious.csv" ;
-					format : csv ;
-			}
-
-		() as BenignSink = FileSink(Benign_Stream)
-			{
-				param
-					file : "pbresults_benign.csv" ;
-					format : csv ;
-			}
+		stream<rstring result> Result = Custom(Benign_Stream as I; Suspicious_Stream as J){
+			logic
+				onTuple I : {
+					printStringLn((rstring)I);
+					submit ({result=""}, Result);
+				}
+				onTuple J : {
+					printStringLn((rstring)J);
+					submit ({result=""}, Result);
+				}
+		}
 
 	}
 

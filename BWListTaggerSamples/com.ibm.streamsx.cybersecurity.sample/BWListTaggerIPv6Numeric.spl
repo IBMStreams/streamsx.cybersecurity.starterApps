@@ -4,14 +4,14 @@ use com.ibm.streams.cybersecurity.tagging::BWListTagger ;
 use com.ibm.streams.cybersecurity.types::* ;
 use com.ibm.streamsx.network.ipv6::* ;
 
-composite BWListTaggerIPv6Numeric
+public composite BWListTaggerIPv6Numeric
 {
 	graph
 		(stream<rstring ips, rstring extra> SrcStream) as
 			SrcOp = FileSource()
 		{
 			param
-				file : "input_ipv6.txt" ;
+				file : getThisToolkitDir() + "/opt/input_ipv6.txt" ;
 			output
 				SrcStream : extra = "abcdef" ;
 		}
@@ -29,10 +29,10 @@ composite BWListTaggerIPv6Numeric
 		{
 			param
 				ipAttr : ips ;
-				blackIPFile : "bwlist/IPBlackList.txt" ;
-				whiteIPFile : "bwlist/IPWhiteList.txt" ;
-				blackDomainFile : "bwlist/DomainsBlackList.txt" ;
-				whiteDomainFile : "bwlist/DomainsWhiteList.txt" ;
+				blackIPFile : getThisToolkitDir() + "/opt/bwlist/IPBlackList.txt" ;
+				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/IPWhiteList.txt" ;
+				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsBlackList.txt" ;
+				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsWhiteList.txt" ;
 			output
 				TaggedStream : ipTags = getIPTags()[0] ;
 		}
