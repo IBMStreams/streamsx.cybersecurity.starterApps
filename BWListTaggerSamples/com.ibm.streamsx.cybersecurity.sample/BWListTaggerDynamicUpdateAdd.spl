@@ -42,7 +42,7 @@ public composite BWListTaggerDynamicUpdateAdd
 		{
 			param
 				initDelay : 5f;
-				directory : "bwlist_add" ;
+				directory : getThisToolkitDir() + "/opt/bwlist_add" ;
 		}
 
 		(stream<BWListUpdate_t> UpdateSrcStream) as UpdateSrcOp =

@@ -42,7 +42,7 @@ public composite BWListTaggerDynamicUpdateRemove
 		{
 			param
 				initDelay : 5f;
-				directory : "bwlist_remove" ;
+				directory : getThisToolkitDir() + "/opt/bwlist_remove" ;
 		}
 
 		(stream<BWListUpdate_t> UpdateSrcStream) as UpdateSrcOp =
