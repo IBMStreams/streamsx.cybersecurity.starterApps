@@ -24,6 +24,12 @@ Clean:
 
 ## Use with Streams in Cloud Pak for Data
 
+To build the application in Streams build service and submit the bundle, run the following command:
+
+`ant buildAndSubmitRemote`
+
+or use the commands below.
+
 Prepare the files used by the application:
 
 `ant init`
