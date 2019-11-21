@@ -4,7 +4,6 @@
 		
 	
 	<property environment="env" />
-	<fail unless="env.STREAMS_INSTALL" message="STREAMS_INSTALL not set." />
 	<property name="streams.install" value="${env.STREAMS_INSTALL}" />
 	<property name="streams.toolkit.dir" value="${streams.install}/toolkits" />
 	<property name="tk.name" value="com.ibm.streamsx.cybersecurity.samples" />
@@ -30,23 +29,24 @@
 		</exec>
 	</target>
 
-    <target name="compileAll" depends="indexToolkit">
-        <antcall target="compile">
-            <param name="mainComp" value="PredictiveBlacklistingBasic" />
-        </antcall>
-    </target>
+	<target name="compileAll" depends="indexToolkit">
+		<antcall target="compile">
+			<param name="mainComp" value="PredictiveBlacklistingBasic" />
+		</antcall>
+	</target>
 
-    <target name="compile" depends="indexToolkit">
-	<fail message="Property &quot;spss.toolkit.path&quot; need to be set to the absolute path containing the 'com.ibm.spss.streams.analytics' toolkit" unless="spss.toolkit.path" />
-        <echo message="Compiling ${mainComp} application..." />
-        <exec executable="${streams.install}/bin/sc">
-            <arg value="-M" />
-            <arg value="${sample.namespace}::${mainComp}" />
-            <arg value="-t" />
-            <arg value="${spss.toolkit.path}:${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${streams.toolkit.dir}/com.ibm.streamsx.network" />
-            <arg value="--output-dir=output/${mainComp}_Output" />
-        </exec>
-    </target>
+	<target name="compile" depends="indexToolkit">
+		<fail unless="env.STREAMS_INSTALL" message="STREAMS_INSTALL not set." />
+		<fail message="Property &quot;spss.toolkit.path&quot; need to be set to the absolute path containing the 'com.ibm.spss.streams.analytics' toolkit" unless="spss.toolkit.path" />
+		<echo message="Compiling ${mainComp} application..." />
+ 		<exec executable="${streams.install}/bin/sc">
+			<arg value="-M" />
+			<arg value="${sample.namespace}::${mainComp}" />
+			<arg value="-t" />
+			<arg value="${spss.toolkit.path}:${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${streams.toolkit.dir}/com.ibm.streamsx.network" />
+			<arg value="--output-dir=output/${mainComp}_Output" />
+		</exec>
+	</target>
 
 <!-- download GeoLite2 CSV database
 	<target name="updateMaxMindGeoIP">	
@@ -84,7 +84,7 @@
 			<arg value="." />
 		</exec>		
 	
-        <delete dir="output" />
+        	<delete dir="output" />
 
 		<!-- remove maxmind files -->
 		<delete>
@@ -98,5 +98,24 @@
 			<dirset dir="${opt.dir}/maxmind" />
 		</delete>
 	</target>
+
+	<target name="buildAndSubmitRemote">
+		<echo message="Build PredictiveBlacklistingBasic application..." />
+		<exec executable="streamsx-sc">
+			<arg value="--disable-ssl-verify" />
+			<arg value="--main-composite" />
+			<arg value="com.ibm.streamsx.cybersecurity.sample::PredictiveBlacklistingBasic" />
+			<arg value="--spl-path" />
+			<arg value="${spss.toolkit.path}" />
+
+		</exec>
+		<echo message="Submit PredictiveBlacklistingBasic application..." />
+		<exec executable="streamsx-streamtool">
+			<arg value="--disable-ssl-verify" />
+			<arg value="submitjob" />
+			<arg value="output/com.ibm.streamsx.cybersecurity.sample.PredictiveBlacklistingBasic.sab" />
+		</exec>
+	</target>
+
 
 </project>

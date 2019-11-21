@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="com.ibm.streamsx.cybersecurity.samples" default="all">
 	<dirname property="com.ibm.streamsx.cybersecurity.samples.DIR" file="${ant.file.com.ibm.streamsx.cybersecurity.samples}"/>
-		
-	
+
 	<property environment="env" />
-	<fail unless="env.STREAMS_INSTALL" message="STREAMS_INSTALL not set." />
 	<property name="streams.install" value="${env.STREAMS_INSTALL}" />
 	<property name="streams.toolkit.dir" value="${streams.install}/toolkits" />
 	<property name="tk.name" value="com.ibm.streamsx.cybersecurity.samples" />
@@ -26,6 +24,7 @@
     </target>
 
     <target name="compile" depends="indexToolkit">
+	<fail unless="env.STREAMS_INSTALL" message="STREAMS_INSTALL not set." />
         <echo message="Compiling ${mainComp} application..." />
         <exec executable="${streams.install}/bin/sc">
             <arg value="-M" />
@@ -45,6 +44,43 @@
 		</exec>		
 	
         <delete dir="output" />
+	</target>
+
+    	<target name="submitAllRemote">
+        	<antcall target="submitRemote">
+            		<param name="mainComp" value="HostProfilingBasic" />
+       	 	</antcall>
+    	</target>
+
+	<target name="submitRemote">
+		<echo message="Submit ${mainComp} application..." />
+		<exec executable="streamsx-streamtool">
+			<arg value="--disable-ssl-verify" />
+			<arg value="submitjob" />
+			<arg value="output/${mainComp}_Output/com.ibm.streamsx.cybersecurity.sample.${mainComp}.sab" />
+		</exec>
+	</target>
+
+
+    	<target name="buildAndSubmitAllRemote">
+        	<antcall target="buildAndSubmitRemote">
+           		<param name="mainComp" value="HostProfilingBasic" />
+        	</antcall>
+    	</target>
+
+	<target name="buildAndSubmitRemote">
+		<echo message="Build ${mainComp} application..." />
+		<exec executable="streamsx-sc">
+			<arg value="--disable-ssl-verify" />
+			<arg value="--main-composite" />
+			<arg value="com.ibm.streamsx.cybersecurity.sample::${mainComp}" />
+		</exec>
+		<echo message="Submit ${mainComp} application..." />
+		<exec executable="streamsx-streamtool">
+			<arg value="--disable-ssl-verify" />
+			<arg value="submitjob" />
+			<arg value="output/com.ibm.streamsx.cybersecurity.sample.${mainComp}.sab" />
+		</exec>
 	</target>
 
 </project>
