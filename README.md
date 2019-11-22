@@ -19,13 +19,12 @@ You can build and run the samples with local Streams or with Streams in **Cloud 
 To launch the samples (BWListTaggerSamples, DomainProfilingSamples, DNSTunnelingSamples, HostProfilingSamples) using [streamsx command line tools](https://streamsxtopology.readthedocs.io/en/stable/scripts/streamtool.html) to a remote Streams instance (Cloud Pak for Data),
 run `ant buildAndSubmitRemote`
 
-
 ## Cybersecurity Toolkit - Getting Started
+
 For information on how to get started with the cybersecurity toolkit, see the following link:
-[http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/)
+* [Detect Active Threats in Real-time: Streams Cybersecurity Toolkit](https://developer.ibm.com/streamsdev/docs/detect-active-threats-real-time-streams-cybersecurity-toolkit/)
+* [Getting Started](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/)
 
 To learn more about Streams:
 * [IBM Streams on Github](http://ibmstreams.github.io)
-* [Introduction to Streams Quick Start Edition](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/qse-intro/)
-* [Streams Getting Started Guide](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/qse-getting-started/)
 * [StreamsDev](https://developer.ibm.com/streamsdev/)
