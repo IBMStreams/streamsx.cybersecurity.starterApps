@@ -14,4 +14,5 @@ sidebar:
 
 ## SPLDOC
 
-[SPLDoc](https://ibmstreams.github.io/streamsx.cybersecurity.starterApps/doc/spldoc/html/)
+[Toolkit](https://ibmstreams.github.io/streamsx.cybersecurity.starterApps/doc/tkspldoc/html/)
+[Samples](https://ibmstreams.github.io/streamsx.cybersecurity.starterApps/doc/spldoc/html/)
