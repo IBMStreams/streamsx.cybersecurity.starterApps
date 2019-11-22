@@ -6,22 +6,22 @@ Incubation for projects is covered here: https://github.com/IBMStreams/administr
 
 ## Status
 
-- [ ] :red_circle: Stable release(s)
-  * Status: **TBD**
-- [ ] :red_circle: Project is properly documentedå
-  * Status: **TBD**
-- [ ] :red_circle: Project has samples and instructions to help users get started easily
-  * Status: **TBD**
+- [x] :red_circle: Stable release(s)
+  * Status: Releases for Streams 4.2 and later are available
+- [x] :red_circle: Project is properly documented
+  * Status: iopages and README.md files
+- [x] :red_circle: Project has samples and instructions to help users get started easily
+  * Status: Each sample contains a README
 - [ ] :red_circle: Sufficient testing
   * Status: **TBD**
-- [ ] :red_circle: Instructions on how to get started with development and contributing to project
-  * Status: **TBD**
-- [ ] :red_circle: Website that contains information and documentation of the project
-  * Status: **TBD**
+- [x] :red_circle: Instructions on how to get started with development and contributing to project
+  * Status: 
+- [x] :red_circle: Website that contains information and documentation of the project
+  * Status: GitHub iopages contains SPLDoc and links to blogs
 - [ ] :red_circle: Clear release plan
   * Status: **TBD**
 - [x] :white_check_mark: At least one active committer
-  * Status: @cancilla as an active committer
+  * Status: At least one active committer available
 
 ### Key
 * :white_check_mark: - Complete
