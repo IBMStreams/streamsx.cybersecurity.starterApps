@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en-us" lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="copyright" content="(C) Copyright 2005"/>
+<meta name="DC.rights.owner" content="(C) Copyright 2005"/>
+<meta name="DC.Type" content="reference"/>
+<meta name="DC.Title" content="SPL File BWListTaggerDynamicUpdateRemove.spl"/>
+<meta name="DC.Format" content="XHTML"/>
+<meta name="DC.Identifier" content="spldoc_compilationunit"/>
+<link rel="stylesheet" type="text/css" href="../../html/commonltr.css"/>
+<link rel="stylesheet" type="text/css" href="../../html/spldoc.css"/>
+<title>SPL File BWListTaggerDynamicUpdateRemove.spl</title>
+</head>
+<body id="spldoc_compilationunit">
+
+
+<h1 class="title topictitle1">SPL File <tt class="ph tt">BWListTaggerDynamicUpdateRemove.spl</tt></h1>
+
+<div class="body refbody">
+<div class="section">
+<p class="p">
+<a class="xref" href="../toolkits/toolkits.html">Toolkits</a> &gt; <a class="xref" href="tk$BWListTaggerSamples.html">BWListTaggerSamples 2.0.0</a> &gt; <a class="xref" href="ns$com.ibm.streamsx.cybersecurity.sample.html">com.ibm.streamsx.cybersecurity.sample</a> &gt; BWListTaggerDynamicUpdateRemove.spl</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Content</h2>
+  
+  <dl class="dl">
+    <dt class="dt dlterm"/>
+<dd class="dd"/>
+
+    
+      <dt class="dt dlterm splhead-2">Operators</dt>
+
+      <dd class="dd">
+<ul class="sl simple">
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.cybersecurity.sample$BWListTaggerDynamicUpdateRemove.html#spldoc_compilationunit__composite_operator__BWListTaggerDynamicUpdateRemove">BWListTaggerDynamicUpdateRemove</a></strong>
+</li>
+
+</ul>
+
+      </dd>
+
+    
+  </dl>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Composites</h2>
+  
+</div>
+
+<div class="section" id="spldoc_compilationunit__composite_operator__BWListTaggerDynamicUpdateRemove"><h2 class="title sectiontitle splpart">composite BWListTaggerDynamicUpdateRemove</h2>
+  
+</div>
+
+<div class="section splgraph">
+  <embed class="image" src="../../image/tk$BWListTaggerSamples/op$com.ibm.streamsx.cybersecurity.sample$BWListTaggerDynamicUpdateRemove.svg" width="447" height="200"/>
+</div>
+
+<div class="section">
+</div>
+
+<div class="section">
+</div>
+
+<div class="section">
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-2">SPL Source Code</h2>
+  
+</div>
+
+
+<div class="section">
+   <pre class="pre codeblock">
+
+ public composite BWListTaggerDynamicUpdateRemove
+ {
+ 	graph
+ 		(stream&lt;rstring domains, rstring extra&gt; SrcStream) as SrcOp = FileSource()
+ 		{
+ 			param
+ 				file : getThisToolkitDir() + "/opt/input_doms.txt" ;
+ 			output
+ 				SrcStream : extra = "abcdef" ;
+ 		}
+ 
+ 		(stream&lt;rstring domains, rstring extra, BWListTag_e domainTags&gt; TaggedStream)
+ 			as BWTaggerOp = BWListTagger(SrcStream2, SrcStream as
+ 			inPort0Alias ; UpdateSrcStream as inPort1Alias)
+ 		{
+ 			param
+ 				domainAttr : domains ;
+ 				blackIPFile : getThisToolkitDir() + "/opt/bwlist/IPBlackList.txt" ;
+ 				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/IPWhiteList.txt" ;
+ 				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsBlackList.txt" ;
+ 				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsWhiteList.txt" ;
+ 			output
+ 				TaggedStream : domainTags = getDomainTags()[0] ;
+ 		}
+ 
+ 		(stream&lt;rstring domains, rstring extra&gt; SrcStream2) as SrcOp2 = FileSource()
+ 		{
+ 			param
+ 				file : getThisToolkitDir() + "/opt/input_doms.txt" ;
+ 				initDelay : 10f ;
+ 			output
+ 				SrcStream2 : extra = "abcdef" ;
+ 		}
+ 
+ 		(stream&lt;rstring filename&gt; DirScanStream) as DirScanOp = DirectoryScan()
+ 		{
+ 			param
+ 				initDelay : 5f;
+ 				directory : getThisToolkitDir() + "/opt/bwlist_remove" ;
+ 		}
+ 
+ 		(stream&lt;BWListUpdate_t&gt; UpdateSrcStream) as UpdateSrcOp =
+ 			FileSource(DirScanStream)
+ 		{
+ 			logic
+ 				state :
+ 				{
+ 					mutable rstring filename_ ;
+ 				}
+ 
+ 				onTuple DirScanStream :
+ 				{
+ 					filename_ = DirScanStream.filename ;
+ 					println("Removing domains from file: " + filename_);
+ 				}
+ 
+ 			output
+ 				UpdateSrcStream : action = remove, // "remove" the domains from either the blacklist or whitelist
+ 				listTag =(size(regexMatch(filename_, "BlackList")) &gt; 0) ? blackList
+ 					:((size(regexMatch(filename_, "WhiteList")) &gt; 0) ? whiteList :
+ 					nonMatched) ;
+ 		}
+ 
+ 		() as Printer = Custom(TaggedStream as inPort0Alias)
+ 		{
+ 			logic
+ 				onTuple inPort0Alias : println(inPort0Alias) ;
+ 		}
+ 
+ }
+
+   </pre>
+
+</div>
+
+</div>
+
+
+</body>
+</html>

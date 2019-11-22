@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en-us" lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="copyright" content="(C) Copyright 2005"/>
+<meta name="DC.rights.owner" content="(C) Copyright 2005"/>
+<meta name="DC.Type" content="reference"/>
+<meta name="DC.Title" content="SPL File PredictiveBlacklistingBasic.spl"/>
+<meta name="DC.Format" content="XHTML"/>
+<meta name="DC.Identifier" content="spldoc_compilationunit"/>
+<link rel="stylesheet" type="text/css" href="../../html/commonltr.css"/>
+<link rel="stylesheet" type="text/css" href="../../html/spldoc.css"/>
+<title>SPL File PredictiveBlacklistingBasic.spl</title>
+</head>
+<body id="spldoc_compilationunit">
+
+
+<h1 class="title topictitle1">SPL File <tt class="ph tt">PredictiveBlacklistingBasic.spl</tt></h1>
+
+<div class="body refbody">
+<div class="section">
+<p class="p">
+<a class="xref" href="../toolkits/toolkits.html">Toolkits</a> &gt; <a class="xref" href="tk$PredictiveBlacklistingSamples.html">PredictiveBlacklistingSamples 2.0.0</a> &gt; <a class="xref" href="ns$com.ibm.streamsx.cybersecurity.sample.html">com.ibm.streamsx.cybersecurity.sample</a> &gt; PredictiveBlacklistingBasic.spl</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Content</h2>
+  
+  <dl class="dl">
+    <dt class="dt dlterm"/>
+<dd class="dd"/>
+
+    
+      <dt class="dt dlterm splhead-2">Operators</dt>
+
+      <dd class="dd">
+<ul class="sl simple">
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.cybersecurity.sample$PredictiveBlacklistingBasic.html#spldoc_compilationunit__composite_operator__PBSrc">PBSrc</a></strong>
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.cybersecurity.sample$PredictiveBlacklistingBasic.html#spldoc_compilationunit__composite_operator__PredictiveBlacklistingBasic">PredictiveBlacklistingBasic</a></strong>
+</li>
+
+</ul>
+
+      </dd>
+
+    
+  </dl>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Composites</h2>
+  
+</div>
+
+<div class="section" id="spldoc_compilationunit__composite_operator__PredictiveBlacklistingBasic"><h2 class="title sectiontitle splpart">composite PredictiveBlacklistingBasic</h2>
+  
+</div>
+
+<div class="section splgraph">
+  <embed class="image" src="../../image/tk$PredictiveBlacklistingSamples/op$com.ibm.streamsx.cybersecurity.sample$PredictiveBlacklistingBasic.svg" width="640" height="154"/>
+</div>
+
+<div class="section">
+</div>
+
+<div class="section">
+</div>
+
+<div class="section">
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-2">SPL Source Code</h2>
+  
+</div>
+
+
+<div class="section">
+   <pre class="pre codeblock">
+
+ public composite PredictiveBlacklistingBasic
+ {
+ 	graph
+ 		(stream&lt;PBDNSResponseMessage_t, tuple&lt;BWListTag_e domainTags,
+ 			list&lt;BWListTag_e&gt; ipTags&gt;&gt; BWTagger_Stream) as BWTagger =
+ 			BWListTagger(PBSrcOp_Stream)
+ 		{
+ 			param
+ 				domainAttr : questionName ;
+ 				ipAttr : concat(answerData, additionalData) ;
+ 				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlackList.txt" ;
+ 				blackIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlackList.txt" ;
+ 				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/domainWhiteList.txt" ;
+ 				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/ipWhiteList.txt" ;
+ 			output
+ 				BWTagger_Stream : domainTags = getDomainTags()[0], ipTags = getIPTags() ;
+ 		}
+ 
+ 		(stream&lt;PBDNSResponseMessage_t, tuple&lt;BWListTag_e bwTag&gt;&gt; BWFilter_Stream) as
+ 			BWFilter = Custom(BWTagger_Stream)
+ 		{
+ 			logic
+ 				onTuple BWTagger_Stream :
+ 				{
+ 					mutable BWListTag_e tag_ = nonMatched ;
+ 					if(domainTags == blackList || has(ipTags, blackList))
+ 					{
+ 						tag_ = blackList ;
+ 					}
+ 
+ 					else if(domainTags == whiteList || has(ipTags, whiteList))
+ 					{
+ 						tag_ = whiteList ;
+ 					}
+ 
+ 					if(tag_ != whiteList)
+ 					{
+ 						mutable BWFilter_Stream outTuple =(BWFilter_Stream) { } ;
+ 						assignFrom(outTuple, BWTagger_Stream) ;
+ 						outTuple.bwTag = tag_ ;
+ 						submit(outTuple, BWFilter_Stream) ;
+ 					}
+ 
+ 				}
+ 
+ 			}
+ 
+ 		(stream&lt;PBDNSResponseMessage_t, tuple&lt;BWListTag_e bwTag,
+ 			IPLocationMatrix_t spatialInfoMatrix&gt;&gt; IPSpatialEnricherOp_Stream) as
+ 			IPSpatialEnricherOp = IPSpatialEnricher(BWFilter_Stream as inPort0Alias)
+ 			{
+ 				param
+ 					inputIPAttr :(list&lt;list&lt;rstring&gt;&gt;) [ answerData, additionalData ] ;
+ 					blocksIPv4File : getThisToolkitDir() + "/opt/maxmind/geo/GeoLite2-City-Blocks-IPv4.csv" ;
+ 					blocksIPv6File : getThisToolkitDir() + "/opt/maxmind/geo/GeoLite2-City-Blocks-IPv6.csv" ;
+ 					locationFile : getThisToolkitDir() + "/opt/maxmind/geo/GeoLite2-City-Locations-en.csv" ;
+ 				output
+ 					IPSpatialEnricherOp_Stream : spatialInfoMatrix = getIPLocationData() ;
+ 			}
+ 
+ 		(stream&lt;PBDNSResponseMessage_t, tuple&lt;BWListTag_e bwTag,
+ 			IPLocationMatrix_t spatialInfoMatrix, IPASNInfoMatrix_t asnInfoMatrix&gt;&gt;
+ 			IPASNEnricherOp_Stream) as IPASNEnricherOp =
+ 				IPASNEnricher(IPSpatialEnricherOp_Stream)
+ 			{
+ 				param
+ 					inputIPAttr :(list&lt;list&lt;rstring&gt;&gt;) [ answerData, additionalData ] ;
+ 					asnIPv4File : getThisToolkitDir() + "/opt/maxmind/asn/GeoIPASNum2.csv" ;
+ 					asnIPv6File : getThisToolkitDir() + "/opt/maxmind/asn/GeoIPASNum2v6.csv" ;
+ 				output
+ 					IPASNEnricherOp_Stream : asnInfoMatrix = getASNInfo() ;
+ 			}
+ 
+ 		(stream&lt;PBFeatureExtractorInput_t&gt; TupleFormatter_Stream) as TupleFormatter =
+ 				Functor(IPASNEnricherOp_Stream)
+ 			{
+ 				output
+ 					TupleFormatter_Stream : answerSpatialInfo = spatialInfoMatrix [ 0 ],
+ 						additionalSpatialInfo = spatialInfoMatrix [ 1 ], answerASNInfo =
+ 						asnInfoMatrix [ 0 ], additionalASNInfo = asnInfoMatrix [ 1 ] ;
+ 			}
+ 
+ 		(stream&lt;PredictiveBlacklisting_t, PBFeatureExtractorInput_t&gt;
+ 			FeatureExtractor_Stream) as FeatureExtractor =
+ 				PredictiveBlacklistingFE(TupleFormatter_Stream as inPort0Alias)
+ 			{
+ 				output
+ 					FeatureExtractor_Stream : domain = TupleFormatter_Stream.questionName,
+ 						featureVector = getFeatureVector() ;
+ 			}
+ 
+ 		(stream&lt;PBDNSResponseMessage_t&gt; PBSrcOp_Stream) as PBSrcOp = PBSrc()
+ 			{
+ 				param
+ 					directory : getThisToolkitDir() + "/opt/" ;
+ 					pattern : "predictive_blacklisting_sample.pcap" ;
+ 			}
+ 
+ 		(stream&lt;rstring empty&gt; DirScanPlaceholder_Stream) as DirScanPlaceholder =
+ 				Custom()
+ 			{
+ 			}
+ 
+ 		(stream&lt;PredictiveBlacklisting_t, PBFeatureExtractorInput_t&gt;
+ 			PredictiveBlacklistingOp_Stream) as PredictiveBlacklistingOp =
+ 				PredictiveBlacklisting(FeatureExtractor_Stream ; DirScanPlaceholder_Stream)
+ 			{
+ 			}
+ 
+ 		(stream&lt;PredictiveBlacklisting_t, PBFeatureExtractorInput_t&gt;
+ 			Suspicious_Stream ; stream&lt;PredictiveBlacklisting_t,
+ 			PBFeatureExtractorInput_t&gt; Benign_Stream) as PredictionFilter =
+ 				Filter(PredictiveBlacklistingOp_Stream)
+ 			{
+ 				param
+ 					filter : predictedClass == "suspicious" ;
+ 			}
+ 
+ 		stream&lt;rstring result&gt; Result = Custom(Benign_Stream as I; Suspicious_Stream as J){
+ 			logic
+ 				onTuple I : {
+ 					printStringLn((rstring)I);
+ 					submit ({result=""}, Result);
+ 				}
+ 				onTuple J : {
+ 					printStringLn((rstring)J);
+ 					submit ({result=""}, Result);
+ 				}
+ 		}
+ 
+ 	}
+
+   </pre>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__composite_operator__PBSrc"><h2 class="title sectiontitle splpart">public composite PBSrc(output DNSMsgParser_Stream)</h2>
+  
+</div>
+
+<div class="section splgraph">
+  <embed class="image" src="../../image/tk$PredictiveBlacklistingSamples/op$com.ibm.streamsx.cybersecurity.sample$PBSrc.svg" width="353" height="109"/>
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+<ul class="sl simple">
+<li class="sli"><strong class="ph b">directory</strong>
+</li>
+
+<li class="sli"><strong class="ph b">pattern</strong>
+</li>
+
+<li class="sli"><strong class="ph b">filterExpression</strong>
+</li>
+
+<li class="sli"><strong class="ph b">initDelay</strong>
+</li>
+
+</ul>
+
+</div>
+
+<div class="section">
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Output Ports</h2>
+
+<ul class="sl simple">
+<li class="sli"><strong class="ph b">DNSMsgParser_Stream</strong>
+</li>
+
+</ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-2">SPL Source Code</h2>
+  
+</div>
+
+
+<div class="section">
+   <pre class="pre codeblock">
+
+ composite PBSrc(output DNSMsgParser_Stream )
+ 	{
+ 		param
+ 			expression&lt;rstring&gt; $directory ;
+ 			expression&lt;rstring&gt; $pattern : "" ;
+ 			expression&lt;rstring&gt; $filterExpression : "udp port 53" ;
+ 			expression&lt;float64&gt; $initDelay : 0f ;
+ 		graph
+ 			(stream&lt;rstring filename&gt; DirScan_Stream) as DirScan = DirectoryScan()
+ 			{
+ 				param
+ 					directory : $directory ;
+ 					pattern : $pattern ;
+ 					initDelay : $initDelay ;
+ 			}
+ 
+ 			(stream&lt;PacketType&gt; PktFileSrc_Stream) as PktFileSrc =
+ 				PacketFileSource(DirScan_Stream)
+ 			{
+ 				param
+ 					inputFilter : $filterExpression ;
+ 					metricsInterval : 0.0 ;
+ 				output
+ 					PktFileSrc_Stream : captureTime = createTimestamp((int64)
+ 						CAPTURE_SECONDS(), CAPTURE_MICROSECONDS() * 1000u), dstAddress =
+ 						convertIPV4AddressNumericToString(IPV4_DST_ADDRESS()), dnsMessage =
+ 						PAYLOAD_DATA() ;
+ 			}
+ 
+ 			(stream&lt;PBDNSResponseMessage_t&gt; DNSMsgParser_Stream) as DNSMsgParser =
+ 				DNSMessageParser(PktFileSrc_Stream)
+ 			{
+ 				param
+ 					messageAttribute : dnsMessage ;
+ 					outputFilters : DNS_RESPONSE_FLAG() &amp;&amp; DNS_ANSWER_COUNT() &gt; 0uh &amp;&amp;
+ 						size(DNS_ANSWER_TYPES()) &gt; 0 &amp;&amp; !(DNS_ANSWER_TYPES() [ 0 ] in [ 2uh, 6uh,
+ 						12uh, 15uh ]) &amp;&amp; ! parseError() ;
+ 				output
+ 					DNSMsgParser_Stream : questionName = DNS_QUESTION_NAME(), responseCode =
+ 						DNS_RESPONSE_CODE(), answerData = DNS_ANSWER_DATA(), answerTypes =
+ 						DNS_ANSWER_TYPES(), answerTTLs = DNS_ANSWER_TTLS(), nameserverData =
+ 						DNS_NAMESERVER_DATA(), nameserverTypes = DNS_NAMESERVER_TYPES(),
+ 						nameserverTTLs = DNS_NAMESERVER_TTLS(), additionalData =
+ 						DNS_ADDITIONAL_DATA(), additionalTypes = DNS_ADDITIONAL_TYPES(),
+ 						additionalTTLs = DNS_ADDITIONAL_TTLS() ;
+ 			}
+ 
+ 	}
+
+   </pre>
+
+</div>
+
+</div>
+
+
+</body>
+</html>
