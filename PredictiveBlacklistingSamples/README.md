@@ -14,6 +14,9 @@ Launch:
 
 `./output/PredictiveBlacklistingBasic_Output/bin/standalone`
 
+or
+
+`ant standalone`
 
 Alternative you can submit the `./output/PredictiveBlacklistingBasic_Output/com.ibm.streamsx.cybersecurity.sample.PredictiveBlacklistingBasic.sab` file to your Streams instance.
 In the Streams Console, go to the Log Viewer and Click on the PE's Console Log to view the output.
