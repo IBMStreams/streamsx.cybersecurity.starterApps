@@ -3,4 +3,5 @@
 */.toolkitList
 /com.ibm.streamsx.network.zip
 /com.ibm.streamsx.network/
-
+/doc/
+*/**/doc/
