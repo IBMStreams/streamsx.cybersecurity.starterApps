@@ -11,6 +11,8 @@ sidebar:
 {% include toc %}
 {% include editme %}
 
+## Cybersecurity Toolkit - Introduction
+[https://developer.ibm.com/streamsdev/docs/detect-active-threats-real-time-streams-cybersecurity-toolkit/](https://developer.ibm.com/streamsdev/docs/detect-active-threats-real-time-streams-cybersecurity-toolkit/)
 
 ## Cybersecurity Toolkit - Getting Started
 For information on how to get started with the cybersecurity toolkit, see the following link:
