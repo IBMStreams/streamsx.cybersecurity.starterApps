@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en-us" lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="copyright" content="(C) Copyright 2005"/>
+<meta name="DC.rights.owner" content="(C) Copyright 2005"/>
+<meta name="DC.Type" content="reference"/>
+<meta name="DC.Title" content="Operator DNSTunneling"/>
+<meta name="DC.Format" content="XHTML"/>
+<meta name="DC.Identifier" content="spldoc_operator"/>
+<link rel="stylesheet" type="text/css" href="../../html/commonltr.css"/>
+<link rel="stylesheet" type="text/css" href="../../html/spldoc.css"/>
+<title>Operator DNSTunneling</title>
+</head>
+<body id="spldoc_operator">
+
+
+<h1 class="title topictitle1">Operator <tt class="ph tt">DNSTunneling</tt></h1>
+
+<div class="body refbody">
+<div class="section">
+<p class="p">
+<a class="xref" href="../toolkits/toolkits.html">Toolkits</a> &gt; <a class="xref" href="tk$com.ibm.streams.cybersecurity.html">com.ibm.streams.cybersecurity 2.1.2</a> &gt; <a class="xref" href="ns$com.ibm.streams.cybersecurity.analytics.html">com.ibm.streams.cybersecurity.analytics</a> &gt; DNSTunneling</p>
+
+</div>
+
+<div class="section splprimop">
+  <embed class="image" src="../../image/tk$com.ibm.streams.cybersecurity/op$com.ibm.streams.cybersecurity.analytics$DNSTunneling.svg" width="872" height="112"/>
+</div>
+
+<div class="section">
+
+<p class="p">The <strong class="ph b">DNSTunneling</strong> operator analyzes DNS response traffic and reports suspicious behaviour that may indicate the presence of DNS tunneling in the network.
+</p>
+
+<p class="p">DNS tunneling is technique whereby data is transmitted and received through DNS query and response packets. Since DNS traffic is typically not blocked by network firewalls,  users can use this technique to access blocked domains and transfer data between systems that they would otherwise not be allowed to access.
+</p>
+
+<p class="p">By default, the operator requires the following attribute types and names to exist in the input schema. You can specify different names for these attributes using the operator parameters (see the <strong class="ph b">Parameters</strong> section).
+</p>
+
+<div class="p">
+<ul class="ul">
+<li class="li"> <tt class="ph tt">rstring questionName</tt></li>
+
+<li class="li"> <tt class="ph tt">uint16 questionType</tt></li>
+
+<li class="li"> <tt class="ph tt">list&lt;rstring&gt; answerData</tt></li>
+
+<li class="li"> <tt class="ph tt">list&lt;uint16&gt; answerTypes</tt></li>
+
+</ul>
+
+</div>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Behavior in a consistent region
+</h2>
+
+<div class="p">
+<ul class="ul">
+<li class="li"> The operator cannot be the start of a consistent region. An error occurs when you compile your streams processing application.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Exceptions
+</h2>
+
+<p class="p">The <tt class="ph tt">DNSTunneling</tt> operator throws an exception in the following cases:
+</p>
+
+<div class="p">
+<ul class="ul">
+<li class="li"> The length of the 'answerData' list is different from the length of the 'answerTypes' list</li>
+
+<li class="li"> The input schema does not contain the required default attribute names, and different names were not assigned via the operator's parameters.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Summary</h2>
+
+<dl class="dl" compact="compact">
+ 
+  <dt class="dt dlterm">Ports</dt>
+
+  <dd class="dd">This operator has 1 input port and 1 output port.</dd>
+
+ 
+ 
+  <dt class="dt dlterm">Windowing</dt>
+
+  <dd class="dd">This operator does not accept any windowing configurations.</dd>
+
+ 
+ 
+  <dt class="dt dlterm">Parameters</dt>
+
+  <dd class="dd">This operator supports 6 parameters.
+<p class="p"> Optional: 
+<a class="xref" href="#spldoc_operator__parameter__answerDataAttr">answerDataAttr</a>, <a class="xref" href="#spldoc_operator__parameter__answerTypesAttr">answerTypesAttr</a>, <a class="xref" href="#spldoc_operator__parameter__filterSHA512Hash">filterSHA512Hash</a>, <a class="xref" href="#spldoc_operator__parameter__questionNameAttr">questionNameAttr</a>, <a class="xref" href="#spldoc_operator__parameter__questionTypeAttr">questionTypeAttr</a>, <a class="xref" href="#spldoc_operator__parameter__trimTXTLengthField">trimTXTLengthField</a>
+
+</p>
+</dd>
+
+ 
+ 
+  <dt class="dt dlterm">Metrics</dt>
+
+  <dd class="dd">This operator does not report any metrics.</dd>
+
+ 
+</dl>
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Properties</h2>
+
+<dl class="dl" compact="compact">
+ 
+  <dt class="dt dlterm">Implementation</dt>
+
+  <dd class="dd">C++</dd>
+
+ 
+ 
+  <dt class="dt dlterm"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__context__providessinglethreadedexecutioncontext">Threading</a></dt>
+
+  <dd class="dd"><tt class="ph tt">Never</tt> - Operator never provides a single threaded execution context.</dd>
+
+ 
+</dl>
+
+</div>
+
+<div class="section">
+<p class="p splhead-1"><strong class="ph b"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set">Input Ports</a></strong></p>
+<dl class="dl">
+  
+   <dt class="dt dlterm">Ports (0)</dt>
+
+   <dd class="dd">
+<p class="p">Ingests tuples containing DNS response records. The input tuple must contain, at a minimum, the following attributes:
+</p>
+
+<div class="p">
+<ul class="ul">
+<li class="li"> <tt class="ph tt">rstring questionName</tt></li>
+
+<li class="li"> <tt class="ph tt">uint16 questionType</tt></li>
+
+<li class="li"> <tt class="ph tt">list&lt;rstring&gt; answerData</tt></li>
+
+<li class="li"> <tt class="ph tt">list&lt;uint16&gt; answerTypes</tt></li>
+
+</ul>
+
+</div>
+
+<p class="p"><strong class="ph b">NOTE</strong>: The attribute names can be changed via the operator's parameters.
+</p>
+
+<p class="p">For convenience, the <em class="ph i">com.ibm.streams.cybersecurity.types::DNSTunnelingInput_t</em> type contains all of the necessary attributes needed by the <strong class="ph b">DNSTunneling</strong> operator.
+</p>
+
+   <dl class="dl">
+    
+      <dt class="dt dlterm">Properties</dt>
+
+      <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__optional">Optional</a>: false
+     </li>
+
+   </ul>
+
+   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__controlport">ControlPort</a>: false
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__tuplemutationallowed">TupleMutationAllowed</a>: false
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__windowingmode">WindowingMode</a>: NonWindowed
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__windowpunctuationinputmode">WindowPunctuationInputMode</a>: Oblivious
+     </li>
+
+   </ul>
+
+      </dd>
+    
+   </dl>
+
+   <p class="p"/>
+   </dd>
+
+  
+</dl>
+
+</div>
+
+<div class="section">
+<p class="p splhead-1"><strong class="ph b"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__output_port_set">Output Ports</a></strong></p>
+<dl class="dl">
+  
+     <dt class="dt dlterm">Assignments</dt>
+
+     <dd class="dd">This operator allows any SPL expression of the correct type to be assigned to output attributes.</dd>
+
+  
+</dl>
+
+<dl class="dl">
+      <dt class="dt dlterm"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__context__customoutputfunctions">Output Functions</a></dt>
+
+    <dd class="dd">
+      <dl class="dl">
+      
+        <dt class="dt dlterm">TunnelingFunctions</dt>
+
+        <dd class="dd">
+          <dl class="dl">
+            <dt class="dt dlterm"/>
+<dd class="dd"/>
+
+            
+              <dt class="dt dlterm">
+                <tt class="ph tt">   &lt;any T&gt; T AsIs()</tt>              </dt>
+
+            <dd class="dd">
+
+<p class="p">The default function for output attributes. By default, this function assigns the output attribute to the value of the input attribute with the same name.
+</p>
+              <p class="p"/>
+
+            </dd>
+
+                        
+              <dt class="dt dlterm">
+                <tt class="ph tt">   rstring getPredictedClass()</tt>              </dt>
+
+            <dd class="dd">
+
+<p class="p">Returns the predicted class of the DNS response packet. If one or more of the <strong class="ph b">answerData</strong> values is considered suspicious, this function will return a value of <tt class="ph tt">suspicious</tt>. Otherwise, this function will return a value of <tt class="ph tt">benign</tt>.
+</p>
+              <p class="p"/>
+
+            </dd>
+
+                        
+              <dt class="dt dlterm">
+                <tt class="ph tt">   list&lt;rstring&gt; getPredictedClasses()</tt>              </dt>
+
+            <dd class="dd">
+
+<p class="p">Returns a list containing the predicted class for each answer. Possible values include: <tt class="ph tt">benign</tt>, <tt class="ph tt">suspicious</tt>.
+</p>
+              <p class="p"/>
+
+            </dd>
+
+                        
+              <dt class="dt dlterm">
+                <tt class="ph tt">   list&lt;rstring&gt; getSuspiciousText()</tt>              </dt>
+
+            <dd class="dd">
+
+<p class="p">Returns a list containing the suspicious text fields from the current DNS response packet
+</p>
+              <p class="p"/>
+
+            </dd>
+
+                        
+              <dt class="dt dlterm">
+                <tt class="ph tt">   list&lt;rstring&gt; getBenignText()</tt>              </dt>
+
+            <dd class="dd">
+
+<p class="p">Returns a list containing the benign text fields from the current DNS response packet
+</p>
+              <p class="p"/>
+
+            </dd>
+
+                        
+              <dt class="dt dlterm">
+                <tt class="ph tt">   uint64 getSuspiciousCount()</tt>              </dt>
+
+            <dd class="dd">
+
+<p class="p">Returns the total number of suspicious text fields received for a given questionName (domain name) since the application started.
+</p>
+              <p class="p"/>
+
+            </dd>
+
+                        
+              <dt class="dt dlterm">
+                <tt class="ph tt">   uint64 getBenignCount()</tt>              </dt>
+
+            <dd class="dd">
+
+<p class="p">Returns the total number of benign text fields received for a given questionName (domain name) since the application started.
+</p>
+              <p class="p"/>
+
+            </dd>
+
+                      </dl>
+        </dd>
+
+      
+      </dl>
+
+    </dd>
+
+  </dl>
+
+ <dl class="dl">
+  
+   <dt class="dt dlterm">Ports (0)</dt>
+
+   <dd class="dd">
+
+<p class="p">Submits a tuple for each DNS response packet that was received. Custom output functions are used to specify the value of the  output tuple attributes. The output tuple attributes whose assignments are not specified are assigned from the input attribute.
+</p>
+
+<p class="p">For convenience, the <em class="ph i">com.ibm.streams.cybersecurity.types::DNSTunnelingResult_t</em> type can be used as the output tuple type of this operator. This type contains attributes that can be assigned from the output functions.
+</p>
+
+    <p class="p"/>
+
+    <dl class="dl">
+     
+      <dt class="dt dlterm">Properties</dt>
+
+      <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__output_port_set__optional">Optional</a>: false
+     </li>
+
+   </ul>
+
+   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__output_port_set__tuplemutationallowed">TupleMutationAllowed</a>: false
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__output_port_set__windowpunctuationoutputmode">WindowPunctuationOutputMode</a>: Generating
+     </li>
+
+   </ul>
+
+</dd>
+     
+    </dl>
+
+    <p class="p"/>
+
+   </dd>
+
+  
+</dl>
+
+</div>
+
+<div class="section">
+<p class="p splhead-1"><strong class="ph b"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters">Parameters</a></strong></p>
+
+
+<p class="p"> Optional: 
+<a class="xref" href="#spldoc_operator__parameter__answerDataAttr">answerDataAttr</a>, <a class="xref" href="#spldoc_operator__parameter__answerTypesAttr">answerTypesAttr</a>, <a class="xref" href="#spldoc_operator__parameter__filterSHA512Hash">filterSHA512Hash</a>, <a class="xref" href="#spldoc_operator__parameter__questionNameAttr">questionNameAttr</a>, <a class="xref" href="#spldoc_operator__parameter__questionTypeAttr">questionTypeAttr</a>, <a class="xref" href="#spldoc_operator__parameter__trimTXTLengthField">trimTXTLengthField</a>
+
+</p>
+<dl class="dl">
+  
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__answerDataAttr"><!-- --></a><tt class="ph tt">answerDataAttr</tt></dt>
+
+     <dd class="dd">
+<p class="p">Specifies the input attribute containing the <em class="ph i">answer data</em>. By default, the operator will look for an input attribute named <strong class="ph b">answerData</strong>.
+</p>
+
+  <dl class="dl">
+    
+     <dt class="dt dlterm">Properties</dt>
+
+     <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: Attribute
+     </li>
+
+   </ul>
+
+     <p class="p"/>
+     </dd>
+
+    
+  </dl>
+
+     </dd>
+
+  
+  
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__answerTypesAttr"><!-- --></a><tt class="ph tt">answerTypesAttr</tt></dt>
+
+     <dd class="dd">
+<p class="p">Specifies the input attribute containing the <em class="ph i">answer types</em>. By default, the operator will look for an input attribute named <strong class="ph b">answerTypes</strong>.
+</p>
+
+  <dl class="dl">
+    
+     <dt class="dt dlterm">Properties</dt>
+
+     <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: Attribute
+     </li>
+
+   </ul>
+
+     <p class="p"/>
+     </dd>
+
+    
+  </dl>
+
+     </dd>
+
+  
+  
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__filterSHA512Hash"><!-- --></a><tt class="ph tt">filterSHA512Hash</tt></dt>
+
+     <dd class="dd">
+<p class="p">If set to <tt class="ph tt">true</tt>, SHA512 hashes sent via the TXT field will be reported as <tt class="ph tt">benign</tt>. If set to <tt class="ph tt">false</tt>, these payloads will be reported as <tt class="ph tt">suspicious</tt>. By default, this value is <tt class="ph tt">false</tt>. 
+</p>
+
+  <dl class="dl">
+    
+     <dt class="dt dlterm">Properties</dt>
+
+     <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: boolean
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: Constant
+     </li>
+
+   </ul>
+
+     <p class="p"/>
+     </dd>
+
+    
+  </dl>
+
+     </dd>
+
+  
+  
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__questionNameAttr"><!-- --></a><tt class="ph tt">questionNameAttr</tt></dt>
+
+     <dd class="dd">
+<p class="p">Specifies the input attribute containing the <em class="ph i">question name (domain name)</em>. By default, the operator will look for an input attribute named <strong class="ph b">questionName</strong>
+</p>
+
+  <dl class="dl">
+    
+     <dt class="dt dlterm">Properties</dt>
+
+     <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: Attribute
+     </li>
+
+   </ul>
+
+     <p class="p"/>
+     </dd>
+
+    
+  </dl>
+
+     </dd>
+
+  
+  
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__questionTypeAttr"><!-- --></a><tt class="ph tt">questionTypeAttr</tt></dt>
+
+     <dd class="dd">
+<p class="p">Specifies the input attribute containing the <em class="ph i">question type</em>. By default, the operator will look for an input attribute named <strong class="ph b">questionType</strong>
+</p>
+
+  <dl class="dl">
+    
+     <dt class="dt dlterm">Properties</dt>
+
+     <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: Attribute
+     </li>
+
+   </ul>
+
+     <p class="p"/>
+     </dd>
+
+    
+  </dl>
+
+     </dd>
+
+  
+  
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__trimTXTLengthField"><!-- --></a><tt class="ph tt">trimTXTLengthField</tt></dt>
+
+     <dd class="dd">
+<p class="p">DNS TXT records generally contain two length fields: one length describes the length of the record as a whole. The second length field describes the length of the character string inside the record. This second length field is typically prepended to the TXT data. If this parameter is set to <tt class="ph tt">true</tt>, the first character of the TXT field (the character representing the second length field) will be removed prior to analyzing the data. If set to <tt class="ph tt">false</tt>, the entire character string will be analyzed. The default value for this parameter is <tt class="ph tt">true</tt>. 
+</p>
+
+  <dl class="dl">
+    
+     <dt class="dt dlterm">Properties</dt>
+
+     <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: boolean
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: Constant
+     </li>
+
+   </ul>
+
+     <p class="p"/>
+     </dd>
+
+    
+  </dl>
+
+     </dd>
+
+  
+</dl>
+
+</div>
+
+<div class="section">
+<p class="p splhead-1"><strong class="ph b"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__context__dependencies">Libraries</a></strong></p>
+<dl class="dl">
+ 
+  <dt class="dt dlterm">No description for library.
+  </dt>
+
+<dd class="dd"/>
+  <dd class="dd"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__context__dependencies__managedlibrary__lib">Library Name</a>: <tt class="ph tt">csa, re2</tt></dd>
+
+  <dd class="dd"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__context__dependencies__managedlibrary__libpath">Library Path</a>: <tt class="ph tt">../../impl/lib/csa/, ../../impl/lib/re2/</tt></dd>
+
+  <dd class="dd"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__context__dependencies__managedlibrary__includepath">Include Path</a>: <tt class="ph tt">../../impl/include/re2/, ../../impl/include/csa/, ../../impl/include/csa/tunneling/, ../../impl/include/</tt></dd>
+
+ 
+</dl>
+
+</div>
+
+</div>
+
+
+</body>
+</html>

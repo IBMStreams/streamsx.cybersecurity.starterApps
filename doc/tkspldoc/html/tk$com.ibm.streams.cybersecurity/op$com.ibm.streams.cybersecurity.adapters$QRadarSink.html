@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en-us" lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="copyright" content="(C) Copyright 2005"/>
+<meta name="DC.rights.owner" content="(C) Copyright 2005"/>
+<meta name="DC.Type" content="reference"/>
+<meta name="DC.Title" content="Operator QRadarSink"/>
+<meta name="DC.Format" content="XHTML"/>
+<meta name="DC.Identifier" content="spldoc_operator"/>
+<link rel="stylesheet" type="text/css" href="../../html/commonltr.css"/>
+<link rel="stylesheet" type="text/css" href="../../html/spldoc.css"/>
+<title>Operator QRadarSink</title>
+</head>
+<body id="spldoc_operator">
+
+
+<h1 class="title topictitle1">Operator <tt class="ph tt">QRadarSink</tt></h1>
+
+<div class="body refbody">
+<div class="section">
+<p class="p">
+<a class="xref" href="../toolkits/toolkits.html">Toolkits</a> &gt; <a class="xref" href="tk$com.ibm.streams.cybersecurity.html">com.ibm.streams.cybersecurity 2.1.2</a> &gt; <a class="xref" href="ns$com.ibm.streams.cybersecurity.adapters.html">com.ibm.streams.cybersecurity.adapters</a> &gt; QRadarSink</p>
+
+</div>
+
+<div class="section splprimop">
+  <embed class="image" src="../../image/tk$com.ibm.streams.cybersecurity/op$com.ibm.streams.cybersecurity.adapters$QRadarSink.svg" width="872" height="112"/>
+</div>
+
+<div class="section">
+
+<p class="p">This operator allows Streams applications to send syslog messages to a QRadar host. The messages are sent in LEEF format. For information on the LEEF format, see the following guide: <a class="xref" href="https://www.ibm.com/developerworks/community/wikis/form/anonymous/api/wiki/9989d3d7-02c1-444e-92be-576b33d2f2be/page/3dc63f46-4a33-4e0b-98bf-4e55b74e556b/attachment/a19b9122-5940-4c89-ba3e-4b4fc25e2328/media/QRadar_LEEF_Format_Guide.pdf">Log Event Extended Format (LEEF)Guide</a>.
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Behaviour in a Consistent Region
+</h2>
+
+<p class="p">This operator can participate in a consistent region. The operator cannot be the start of a consistent region.
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Exceptions
+</h2>
+
+<div class="p">The QRadarSink operator will return an exception in the following cases:
+<ul class="ul">
+<li class="li"> If one of the following parameters contains a pipe '|' character: vendor, product, productVersion, eventID</li>
+
+<li class="li"> The <tt class="ph tt">host</tt> parameter cannot be an empty string</li>
+
+<li class="li"> The <tt class="ph tt">host</tt> parameter is missing either the host or the port number</li>
+
+<li class="li"> The <tt class="ph tt">attrIncludes</tt> and <tt class="ph tt">attrExcludes</tt> parameters are both defined (only one of these parameters can be specified at a time)</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Example
+</h2>
+
+<div class="p">
+<pre class="pre codeblock">
+use com.ibm.streams.cybersecurity.adapters::* ;
+
+composite QRadarTest
+{
+   graph
+     (stream&lt;rstring data, rstring src, rstring dest, rstring eventID&gt;
+       SrcStream) as Src = Beacon()
+     {
+       param
+         initDelay : 10f ;
+         iterations : 5u ;
+       output
+         SrcStream : data =(rstring) IterationCount(), src = "1.1.1.1", dest =
+           "2.2.2.2", eventID = (rstring) (IterationCount() * 10ul) ;
+     }
+     
+     () as QRadarOp = QRadarSink(SrcStream)
+     {
+       param
+         host : getSubmissionTimeValue("host", "127.0.0.1") + ":" + getSubmissionTimeValue("port", "15001") ;
+         vendor : "Company" ;
+         product : "Product Name" ;
+         productVersion : "1.0.0" ;
+         eventIDAttr : eventID;                  
+     }
+}
+</pre>
+
+
+</div>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Summary</h2>
+
+<dl class="dl" compact="compact">
+ 
+  <dt class="dt dlterm">Ports</dt>
+
+  <dd class="dd">This operator has 1 input port and 0 output ports.</dd>
+
+ 
+ 
+  <dt class="dt dlterm">Windowing</dt>
+
+  <dd class="dd">This operator does not accept any windowing configurations.</dd>
+
+ 
+ 
+  <dt class="dt dlterm">Parameters</dt>
+
+  <dd class="dd">This operator supports 9 parameters.
+<p class="p"> Required: 
+<a class="xref" href="#spldoc_operator__parameter__host">host</a>
+
+</p>
+
+<p class="p"> Optional: 
+<a class="xref" href="#spldoc_operator__parameter__attrExcludes">attrExcludes</a>, <a class="xref" href="#spldoc_operator__parameter__attrIncludes">attrIncludes</a>, <a class="xref" href="#spldoc_operator__parameter__eventID">eventID</a>, <a class="xref" href="#spldoc_operator__parameter__eventIDAttr">eventIDAttr</a>, <a class="xref" href="#spldoc_operator__parameter__includeSyslogHeader">includeSyslogHeader</a>, <a class="xref" href="#spldoc_operator__parameter__product">product</a>, <a class="xref" href="#spldoc_operator__parameter__productVersion">productVersion</a>, <a class="xref" href="#spldoc_operator__parameter__vendor">vendor</a>
+
+</p>
+</dd>
+
+ 
+ 
+  <dt class="dt dlterm">Metrics</dt>
+
+  <dd class="dd">This operator does not report any metrics.</dd>
+
+ 
+</dl>
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Properties</h2>
+
+<dl class="dl" compact="compact">
+ 
+  <dt class="dt dlterm">Implementation</dt>
+
+  <dd class="dd">Java</dd>
+
+ 
+</dl>
+
+</div>
+
+<div class="section">
+<p class="p splhead-1"><strong class="ph b"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set">Input Ports</a></strong></p>
+<dl class="dl">
+  
+   <dt class="dt dlterm">Ports (0)</dt>
+
+   <dd class="dd">
+
+<p class="p">Port that ingests tuples
+</p>
+   </dd>
+
+  
+    
+      <dt class="dt dlterm">Properties</dt>
+
+      <dd class="dd">
+   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__optional">Optional</a>: false
+     </li>
+
+   </ul>
+
+   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__controlport">ControlPort</a>: false
+</li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__windowingmode">WindowingMode</a>: NonWindowed
+</li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__input_port_set__windowpunctuationinputmode">WindowPunctuationInputMode</a>: Oblivious
+</li>
+
+   </ul>
+
+      </dd>
+
+    
+</dl>
+
+</div>
+
+<div class="section">
+<p class="p splhead-1"><strong class="ph b"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters">Parameters</a></strong></p>
+This operator supports 9 parameters.
+<p class="p"> Required: 
+<a class="xref" href="#spldoc_operator__parameter__host">host</a>
+
+</p>
+
+<p class="p"> Optional: 
+<a class="xref" href="#spldoc_operator__parameter__attrExcludes">attrExcludes</a>, <a class="xref" href="#spldoc_operator__parameter__attrIncludes">attrIncludes</a>, <a class="xref" href="#spldoc_operator__parameter__eventID">eventID</a>, <a class="xref" href="#spldoc_operator__parameter__eventIDAttr">eventIDAttr</a>, <a class="xref" href="#spldoc_operator__parameter__includeSyslogHeader">includeSyslogHeader</a>, <a class="xref" href="#spldoc_operator__parameter__product">product</a>, <a class="xref" href="#spldoc_operator__parameter__productVersion">productVersion</a>, <a class="xref" href="#spldoc_operator__parameter__vendor">vendor</a>
+
+</p>
+<dl class="dl">
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__attrExcludes"><!-- --></a><tt class="ph tt">attrExcludes</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies a list of attributes to exclude from the event payload. If this parameter is present, then any attributes not specified in this list will be included in the event payload. If neither this parameter nor the <strong class="ph b">attrIncludes</strong> parameter are specified, then all input attributes are added to the event payload in the form of: &lt;attribute_name&gt;=&lt;attribute_value&gt;. This parameter cannot be specified if the <strong class="ph b">attrIncludes</strong> parameter is specified.
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: rstring
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__attrIncludes"><!-- --></a><tt class="ph tt">attrIncludes</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies a list of attributes to include in the event payload. If this parameter is present, then any attributes not specified in this list will not be included in the event payload. If neither this parameter nor the <strong class="ph b">attrIncludes</strong> parameter are specified, then all input attributes are added to the event payload in the form of: &lt;attribute_name&gt;=&lt;attribute_value&gt;. This parameter cannot be specified if the <strong class="ph b">attrExcludes</strong> parameter is specified.
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: rstring
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__eventID"><!-- --></a><tt class="ph tt">eventID</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies the value to use for the <em class="ph i">EventID</em> field in the LEEF header. This parameter can be used to specify a constant eventID value to be used when sending log records to QRadar. To dynamically update the eventID based on attribute values, use the <strong class="ph b">eventIDAttr</strong> parameter instead. The default value for this parameter is <tt class="ph tt">0</tt>.
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: rstring
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__eventIDAttr"><!-- --></a><tt class="ph tt">eventIDAttr</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies that attribute on the input port that contains the value to use for the <em class="ph i">EventID</em> field in the LEEF header. This parameter can be used to dynamically set the eventID value for the current log record being sent to QRadar. To set a constant eventID for all log records, use the <strong class="ph b">eventID</strong> parameter instead. If this parameter is not specified, then the <strong class="ph b">eventID</strong> parameter is used instead.
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: rstring
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: Attribute
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__host"><!-- --></a><tt class="ph tt">host</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies the hostname (or IP address) and port number of the QRadar host. The expected format for this value is: &lt;hostname&gt;:&lt;port&gt;
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: rstring
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: false
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__includeSyslogHeader"><!-- --></a><tt class="ph tt">includeSyslogHeader</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies whether to include the syslog header when sending the message. The default value is <tt class="ph tt">true</tt>.
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: boolean
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__product"><!-- --></a><tt class="ph tt">product</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies the value to use for the <em class="ph i">Product name</em> field in the LEEF header. The default value is <tt class="ph tt">IBM Streams</tt>.
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: rstring
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__productVersion"><!-- --></a><tt class="ph tt">productVersion</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies the value to use for the <em class="ph i">Product version</em> field in the LEEF header. The default value is equal to the version of Streams that the application is running on (i.e. 4.2.0.0).
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: rstring
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+
+<dt class="dt dlterm"><a name="spldoc_operator__parameter__vendor"><!-- --></a><tt class="ph tt">vendor</tt></dt>
+
+<dd class="dd">
+<p class="p">Specifies the value to use for the <em class="ph i">Vendor or manufacturer name</em> field in the LEEF header. The default value is <tt class="ph tt">IBM</tt>.
+</p>
+<dl class="dl">
+
+ <dt class="dt dlterm">Properties </dt>
+
+ <dd class="dd">
+  <ul class="sl simple">
+  <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__type">Type</a>: rstring
+  </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+  </ul>
+
+ </dd>
+
+
+</dl>
+
+</dd>
+
+
+</dl>
+
+</div>
+
+<div class="section">
+<p class="p splhead-1"><strong class="ph b"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__context__dependencies">Libraries</a></strong></p>
+
+ <dl class="dl">
+ 
+  <dt class="dt dlterm">Operator class library
+  </dt>
+
+  <dd class="dd"/>
+
+  <dd class="dd"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__context__dependencies__managedlibrary__libpath">Library Path</a>: <tt class="ph tt">../../impl/lib/com.ibm.streams.cybersecurity.jar, ../../impl/lib/*</tt></dd>
+
+ 
+ </dl>
+
+</div>
+
+</div>
+
+
+</body>
+</html>
