@@ -24,3 +24,7 @@ sidebar:
 To launch the samples (BWListTaggerSamples, DomainProfilingSamples, DNSTunnelingSamples, HostProfilingSamples) using [streamsx command line tools](https://streamsxtopology.readthedocs.io/en/stable/scripts/streamtool.html) to a remote Streams instance (Cloud Pak for Data),
 run `ant buildAndSubmitRemote`
 
+## Cybersecurity Toolkit - Getting Started
+For information on how to get started with the cybersecurity toolkit, see the following link:
+[http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/)
+
