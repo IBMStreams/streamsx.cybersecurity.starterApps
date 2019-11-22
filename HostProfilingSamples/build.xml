@@ -46,6 +46,12 @@
         <delete dir="output" />
 	</target>
 
+	<target name="standalone">
+		<echo message="Launch application in standalone mode ..." />
+		<exec executable="./output/HostProfilingBasic_Output/bin/standalone">
+		</exec>
+	</target>
+
     	<target name="submitAllRemote">
         	<antcall target="submitRemote">
             		<param name="mainComp" value="HostProfilingBasic" />

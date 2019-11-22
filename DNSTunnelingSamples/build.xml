@@ -48,6 +48,12 @@
 
 	</target>
 
+	<target name="standalone">
+		<echo message="Launch application in standalone mode ..." />
+		<exec executable="./output/DNSTunnelingBasic_Output/bin/standalone">
+		</exec>
+	</target>
+
     	<target name="submitAllRemote">
         	<antcall target="submitRemote">
             		<param name="mainComp" value="DNSTunnelingBasic" />

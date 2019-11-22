@@ -68,6 +68,11 @@
 	
 	</target>
 
+	<target name="standalone">
+		<echo message="Launch application in standalone mode ..." />
+		<exec executable="./output/BWListTaggerDomain_Output/bin/standalone">
+		</exec>
+	</target>
 
     <target name="submitAllRemote">
         <antcall target="submitRemote">

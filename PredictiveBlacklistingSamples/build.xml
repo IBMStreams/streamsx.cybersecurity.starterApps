@@ -99,6 +99,12 @@
 		</delete>
 	</target>
 
+	<target name="standalone">
+		<echo message="Launch application in standalone mode ..." />
+		<exec executable="./output/PredictiveBlacklistingBasic_Output/bin/standalone">
+		</exec>
+	</target>
+
 	<target name="buildAndSubmitRemote">
 		<echo message="Build PredictiveBlacklistingBasic application..." />
 		<exec executable="streamsx-sc">
