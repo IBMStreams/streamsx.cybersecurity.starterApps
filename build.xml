@@ -1,0 +1,49 @@
+<project name="streamsx.cybersecurity.starterApps" default="all" basedir=".">
+
+
+    <target name="clean">
+       <ant dir="BWListTaggerSamples" target="clean">
+       </ant>
+       <ant dir="DNSTunnelingSamples" target="clean">
+       </ant>
+       <ant dir="DomainProfilingSamples" target="clean">
+       </ant>
+       <ant dir="HostProfilingSamples" target="clean">
+       </ant>
+    </target>
+
+    <target name="all">
+       <ant dir="BWListTaggerSamples" target="all">
+       </ant>
+       <ant dir="DNSTunnelingSamples" target="all">
+       </ant>
+       <ant dir="DomainProfilingSamples" target="all">
+       </ant>
+       <ant dir="HostProfilingSamples" target="all">
+       </ant>
+    </target>
+
+    <target name="submitRemote">
+       <ant dir="BWListTaggerSamples" target="submitAllRemote">
+       </ant>
+       <ant dir="DNSTunnelingSamples" target="submitAllRemote">
+       </ant>
+       <ant dir="DomainProfilingSamples" target="submitAllRemote">
+       </ant>
+       <ant dir="HostProfilingSamples" target="submitAllRemote">
+       </ant>
+    </target>
+
+    <target name="buildAndSubmitRemote">
+       <ant dir="BWListTaggerSamples" target="buildAndSubmitAllRemote">
+       </ant>
+       <ant dir="DNSTunnelingSamples" target="buildAndSubmitAllRemote">
+       </ant>
+       <ant dir="DomainProfilingSamples" target="buildAndSubmitAllRemote">
+       </ant>
+       <ant dir="HostProfilingSamples" target="buildAndSubmitAllRemote">
+       </ant>
+    </target>
+
+	
+</project>

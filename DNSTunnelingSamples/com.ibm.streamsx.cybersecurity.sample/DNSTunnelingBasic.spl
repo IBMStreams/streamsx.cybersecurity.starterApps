@@ -5,13 +5,13 @@ use com.ibm.streams.cybersecurity.types::* ;
 use com.ibm.streamsx.network.source::* ;
 use com.ibm.streamsx.network.parse::* ;
    
-composite DNSTunnelingBasic
+public composite DNSTunnelingBasic
 {
 	graph
 		stream<blob dnsMessage> DNSPacketMessageStream = PacketFileSource()
 		{
 			param
-				pcapFilename : getThisToolkitDir() + "/etc/dnstunneling.pcap" ;
+				pcapFilename : getThisToolkitDir() + "/opt/dnstunneling.pcap" ;
 				inputFilter : "udp port 53" ; // filter out non-dns traffic
 				metricsInterval : 0.0 ;
 			output
@@ -40,11 +40,10 @@ composite DNSTunnelingBasic
 					getBenignCount() ;
 		}
 
-		() as FileSink_3 = FileSink(TunnelledDomains)
+		() as Printer = Custom(TunnelledDomains as I)
 		{
-			param
-				file : "output.txt" ;
-				flush : 1u ;
+			logic
+				onTuple I : println(I) ;
 		}
 
 }

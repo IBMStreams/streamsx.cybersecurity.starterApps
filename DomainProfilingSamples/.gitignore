@@ -1,12 +1,8 @@
-<<<<<<< Updated upstream
-=======
 /.apt_generated/
->>>>>>> Stashed changes
+/.toolkitList
 /output/
 /data/*
 toolkit.xml
 .toolkitList
-<<<<<<< Updated upstream
 .settings/
-=======
->>>>>>> Stashed changes
+/.classpath

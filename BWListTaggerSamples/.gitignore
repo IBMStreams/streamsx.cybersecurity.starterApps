@@ -1,5 +1,8 @@
+/.apt_generated/
 /.toolkitList
 /output/
-/.settings
-/.toolkitIndex
+/data/*
+toolkit.xml
+.toolkitList
+.settings/
 /.classpath

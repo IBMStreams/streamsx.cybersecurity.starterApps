@@ -3,13 +3,13 @@
   <info:identity>
     <info:name>DNSTunnelingSamples</info:name>
     <info:description></info:description>
-    <info:version>1.0.0</info:version>
-    <info:requiredProductVersion>4.1.1.0</info:requiredProductVersion>
+    <info:version>2.0.0</info:version>
+    <info:requiredProductVersion>4.3.0.0</info:requiredProductVersion>
   </info:identity>
   <info:dependencies>
     <info:toolkit>
       <common:name>com.ibm.streamsx.network</common:name>
-      <common:version>[2.0.0,4.0.0)</common:version>
+      <common:version>[3.0.0,4.0.0)</common:version>
     </info:toolkit>
     <info:toolkit>
       <common:name>com.ibm.streams.cybersecurity</common:name>
