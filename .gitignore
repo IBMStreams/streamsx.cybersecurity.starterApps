@@ -5,3 +5,4 @@
 /com.ibm.streamsx.network/
 /doc/
 */**/doc/
+.project
