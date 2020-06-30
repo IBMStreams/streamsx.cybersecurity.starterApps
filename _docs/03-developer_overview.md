@@ -16,7 +16,7 @@ sidebar:
  1. Download or clone the git repository to your system
  2. Each application comes with a build.xml that will compile the application using local Streams
    - For the BWListTaggerSamples, DomainProfilingSamples, DNSTunnelingSamples and HostProfilingSamples application, run `ant`
-   - For the PredictiveBlacklistingSamples application, run `ant -Dspss.toolkit.path=<path_to_spss_toolkit>`
+   - For the PredictiveBlocklistingSamples application, run `ant -Dspss.toolkit.path=<path_to_spss_toolkit>`
  3. Submit the job! (the *.sab file can be found in the `output` directory)
 
 ### Cloud Pak for Data

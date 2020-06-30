@@ -17,7 +17,7 @@ In order to get started with using the Cybersecurity Toolkit, it is highly recom
 
 * DomainProfiling - Detects suspicious behaviour based on profiles built using domains found in DNS response traffic.
 * HostProfiling - Detects suspicious behaviour based on profiles built using hosts found in DNS response traffic.
-* PredictiveBlacklisting - Predicts where a domain should be added to a blacklist.
+* PredictiveBlocklisting - Predicts where a domain should be added to a blocklist.
 
 
 ## SPLDOC
