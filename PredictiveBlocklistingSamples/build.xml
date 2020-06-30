@@ -37,13 +37,17 @@
 
 	<target name="compile" depends="indexToolkit">
 		<fail unless="env.STREAMS_INSTALL" message="STREAMS_INSTALL not set." />
-		<fail message="Property &quot;spss.toolkit.path&quot; need to be set to the absolute path containing the 'com.ibm.spss.streams.analytics' toolkit" unless="spss.toolkit.path" />
+		<fail message="Property &quot;spss.toolkit&quot; need to be set to the absolute path containing the 'com.ibm.spss.streams.analytics' toolkit" unless="spss.toolkit" />
+		<property name="cybersecurity.toolkit" location="${env.STREAMS_INSTALL}/toolkits/com.ibm.streams.cybersecurity" />
+		<property name="network.toolkit" location="${env.STREAMS_INSTALL}/toolkits/com.ibm.streamsx.network" />
+		<echo message="cybersecurity toolkit: ${cybersecurity.toolkit}"/>
+		<echo message="network toolkit: ${network.toolkit}"/>
 		<echo message="Compiling ${mainComp} application..." />
  		<exec executable="${streams.install}/bin/sc">
 			<arg value="-M" />
 			<arg value="${sample.namespace}::${mainComp}" />
 			<arg value="-t" />
-			<arg value="${spss.toolkit.path}:${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${streams.toolkit.dir}/com.ibm.streamsx.network" />
+			<arg value="${spss.toolkit}:${cybersecurity.toolkit}:${network.toolkit}" />
 			<arg value="--output-dir=output/${mainComp}_Output" />
 		</exec>
 	</target>
