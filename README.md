@@ -14,8 +14,8 @@ You can build and run the samples with local Streams or with Streams in **Cloud 
 
  1. Download or clone the git repository to your system
  2. Each application comes with a build.xml that will compile the application using local Streams
-   - For the BWListTaggerSamples, DomainProfilingSamples, DNSTunnelingSamples and HostProfilingSamples application, run `ant`
-   - For the PredictiveBlocklistingSamples application, run `ant -Dspss.toolkit.path=<path_to_spss_toolkit>`
+   - For the BWListTaggerSamples, DomainProfilingSamples, DNSTunnelingSamples and HostProfilingSamples application, run `ant` or `ant -Dcybersecurity.toolkit=<path_to_cybersecurity_toolkit>`
+   - For the PredictiveBlocklistingSamples application, run `ant -Dspss.toolkit=<path_to_spss_toolkit>`  or `ant -Dspss.toolkit=<path_to_spss_toolkit> -Dcybersecurity.toolkit=<path_to_cybersecurity_toolkit>`
  3. Submit the job! (the *.sab file can be found in the `output` directory)
 
 ### Cloud Pak for Data
