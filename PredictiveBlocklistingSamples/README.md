@@ -6,7 +6,12 @@ This sample demonstrates how you can use the PredictiveBlocklisting operator fro
 
 Build the application:
 
-`ant -Dspss.toolkit.path=<path_to_spss_toolkit>`
+`ant -Dspss.toolkit=<path_to_spss_toolkit>`
+
+or 
+
+`ant -Dspss.toolkit=<path_to_spss_toolkit> -Dcybersecurity.toolkit=<path_to_cybersecurity_toolkit>`
+
 
 The application is build using the cybersecurity and network toolkit from the local Streams installation ("$STREAMS_INSTALL/toolkits").
 
