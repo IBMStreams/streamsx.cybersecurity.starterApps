@@ -19,10 +19,10 @@ public composite HostProfilingBasic
 		{
 			param
 				domainAttr : questionName ;
-				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlackList.txt" ;
-				blackIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlackList.txt" ;
-				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/domainWhiteList.txt" ;
-				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/ipWhiteList.txt" ;
+				blockDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlockList.txt" ;
+				blockIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlockList.txt" ;
+				allowDomainFile : getThisToolkitDir() + "/opt/bwlist/domainAllowList.txt" ;
+				allowIPFile : getThisToolkitDir() + "/opt/bwlist/ipAllowList.txt" ;
 			output
 				BWTaggerOp_Stream : bwTag = getDomainTags()[0] ;
 		}
@@ -31,7 +31,7 @@ public composite HostProfilingBasic
 			Filter(BWTaggerOp_Stream)
 		{
 			param
-				filter : bwTag != whiteList ;
+				filter : bwTag != allowList ;
 		}
 
 		(stream<HostProfilingResult_t> HostProfilingOp_Stream) as HostProfilingOp =

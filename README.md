@@ -2,8 +2,10 @@
 Starter applications for IBM Streams cybersecurity toolkit
 
 These sample applications are compatible with **Streams 4.3** and later.
+Requires version **[3.0.0,4.0.0)** of the toolkit `com.ibm.streams.cybersecurity``.
 You can build and run the samples with local Streams or with Streams in **Cloud Pak for Data**.
 
+*For Streams 4.3 and toolkit version 2.x use version* [2.0](https://github.com/IBMStreams/streamsx.cybersecurity.starterApps/tree/v2.0.0) *of the samples.*
 *For Streams 4.2 use version* [1.0](https://github.com/IBMStreams/streamsx.cybersecurity.starterApps/tree/v1.0.0) *of the samples.*
 
 ## Quick Start
@@ -11,7 +13,7 @@ You can build and run the samples with local Streams or with Streams in **Cloud 
  1. Download or clone the git repository to your system
  2. Each application comes with a build.xml that will compile the application using local Streams
    - For the BWListTaggerSamples, DomainProfilingSamples, DNSTunnelingSamples and HostProfilingSamples application, run `ant`
-   - For the PredictiveBlacklistingSamples application, run `ant -Dspss.toolkit.path=<path_to_spss_toolkit>`
+   - For the PredictiveBlocklistingSamples application, run `ant -Dspss.toolkit.path=<path_to_spss_toolkit>`
  3. Submit the job! (the *.sab file can be found in the `output` directory)
 
 ### Cloud Pak for Data

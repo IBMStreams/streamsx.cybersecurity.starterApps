@@ -46,12 +46,13 @@
 
 	<target name="compile" depends="indexToolkit">
 		<fail unless="env.STREAMS_INSTALL" message="STREAMS_INSTALL not set." />
+		<property name="streams.splpath" value="${env.STREAMS_SPLPATH}" />
 		<echo message="Compiling ${mainComp} application..." />
 		<exec executable="${streams.install}/bin/sc">
 			<arg value="-M" />
 			<arg value="${sample.namespace}::${mainComp}" />
 			<arg value="-t" />
-			<arg value="${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${streams.toolkit.dir}/com.ibm.streamsx.network" />
+			<arg value="${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${streams.toolkit.dir}/com.ibm.streamsx.network:${streams.splpath}" />
 			<arg value="--output-dir=output/${mainComp}_Output" />
 		</exec>
 	</target>

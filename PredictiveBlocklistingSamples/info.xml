@@ -2,9 +2,9 @@
 <info:toolkitInfoModel xmlns:common="http://www.ibm.com/xmlns/prod/streams/spl/common"
  xmlns:info="http://www.ibm.com/xmlns/prod/streams/spl/toolkitInfo">
  <info:identity>
-   <info:name>PredictiveBlacklistingSamples</info:name>
+   <info:name>PredictiveBlocklistingSamples</info:name>
    <info:description></info:description>
-   <info:version>2.0.0</info:version>
+   <info:version>3.0.0</info:version>
    <info:requiredProductVersion>4.3.0.0</info:requiredProductVersion>
  </info:identity>
  <info:dependencies>
@@ -14,7 +14,7 @@
    </info:toolkit>
    <info:toolkit>
      <common:name>com.ibm.streams.cybersecurity</common:name>
-     <common:version>[2.0.0,3.0.0)</common:version>
+     <common:version>[3.0.0,4.0.0)</common:version>
    </info:toolkit>
    <info:toolkit>
      <common:name>com.ibm.streamsx.network</common:name>

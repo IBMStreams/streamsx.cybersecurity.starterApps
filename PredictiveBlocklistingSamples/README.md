@@ -1,6 +1,6 @@
-## PredictiveBlacklistingSamples
+## PredictiveBlocklistingSamples
 
-This sample demonstrates how you can use the PredictiveBlacklisting operator from the `com.ibm.streams.cybersecurity` toolkit.
+This sample demonstrates how you can use the PredictiveBlocklisting operator from the `com.ibm.streams.cybersecurity` toolkit.
 
 ## Use with local Streams installation
 
@@ -12,13 +12,13 @@ The application is build using the cybersecurity and network toolkit from the lo
 
 Launch:
 
-`./output/PredictiveBlacklistingBasic_Output/bin/standalone`
+`./output/PredictiveBlocklistingBasic_Output/bin/standalone`
 
 or
 
 `ant standalone`
 
-Alternative you can submit the `./output/PredictiveBlacklistingBasic_Output/com.ibm.streamsx.cybersecurity.sample.PredictiveBlacklistingBasic.sab` file to your Streams instance.
+Alternative you can submit the `./output/PredictiveBlocklistingBasic_Output/com.ibm.streamsx.cybersecurity.sample.PredictiveBlocklistingBasic.sab` file to your Streams instance.
 In the Streams Console, go to the Log Viewer and Click on the PE's Console Log to view the output.
 
 Clean:
@@ -39,11 +39,11 @@ Prepare the files used by the application:
 
 Build the application:
 
-`streamsx-sc --disable-ssl-verify --main-composite com.ibm.streamsx.cybersecurity.sample::PredictiveBlacklistingBasic --spl-path <path_to_spss_toolkit>`
+`streamsx-sc --disable-ssl-verify --main-composite com.ibm.streamsx.cybersecurity.sample::PredictiveBlocklistingBasic --spl-path <path_to_spss_toolkit>`
 
 Launch:
 
-`streamsx-streamtool --disable-ssl-verify submitjob output/com.ibm.streamsx.cybersecurity.sample.PredictiveBlacklistingBasic.sab`
+`streamsx-streamtool --disable-ssl-verify submitjob output/com.ibm.streamsx.cybersecurity.sample.PredictiveBlocklistingBasic.sab`
 
 Cancel the job:
 
