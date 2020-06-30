@@ -22,7 +22,7 @@
 <div class="body refbody">
 <div class="section">
 <p class="p">
-<a class="xref" href="../toolkits/toolkits.html">Toolkits</a> &gt; <a class="xref" href="tk$com.ibm.streams.cybersecurity.html">com.ibm.streams.cybersecurity 2.1.2</a> &gt; <a class="xref" href="ns$com.ibm.streams.cybersecurity.types.html">com.ibm.streams.cybersecurity.types</a> &gt; CyberSecTypes.spl</p>
+<a class="xref" href="../toolkits/toolkits.html">Specialized toolkits</a> &gt; <a class="xref" href="tk$com.ibm.streams.cybersecurity.html">com.ibm.streams.cybersecurity 3.0.0</a> &gt; <a class="xref" href="ns$com.ibm.streams.cybersecurity.types.html">com.ibm.streams.cybersecurity.types</a> &gt; CyberSecTypes.spl</p>
 
 </div>
 
@@ -88,13 +88,13 @@
 <li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streams.cybersecurity.types$CyberSecTypes.html#spldoc_compilationunit__type__PBDNSResponseMessage_t">PBDNSResponseMessage_t</a></strong>: This type is part of the PBFeatureExtractorInput_t type.
 </li>
 
-<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streams.cybersecurity.types$CyberSecTypes.html#spldoc_compilationunit__type__PBFeatureExtractorInput_t">PBFeatureExtractorInput_t</a></strong>: This type should be used the input type of the PredictiveBlacklistingFE operator.
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streams.cybersecurity.types$CyberSecTypes.html#spldoc_compilationunit__type__PBFeatureExtractorInput_t">PBFeatureExtractorInput_t</a></strong>: This type should be used the input type of the PredictiveBlocklistingFE operator.
 </li>
 
-<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streams.cybersecurity.types$CyberSecTypes.html#spldoc_compilationunit__type__PBFeatureVector_t">PBFeatureVector_t</a></strong>: This type is part of the PredictiveBlacklisting_t type.
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streams.cybersecurity.types$CyberSecTypes.html#spldoc_compilationunit__type__PBFeatureVector_t">PBFeatureVector_t</a></strong>: This type is part of the PredictiveBlocklisting_t type.
 </li>
 
-<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streams.cybersecurity.types$CyberSecTypes.html#spldoc_compilationunit__type__PredictiveBlacklisting_t">PredictiveBlacklisting_t</a></strong>: This type should be used as the output type of the PredictiveBlacklistingFE operator and the input and output type of the PredictiveBlacklisting operator.
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streams.cybersecurity.types$CyberSecTypes.html#spldoc_compilationunit__type__PredictiveBlocklisting_t">PredictiveBlocklisting_t</a></strong>: This type should be used as the output type of the PredictiveBlocklistingFE operator and the input and output type of the PredictiveBlocklisting operator.
 </li>
 
 <li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streams.cybersecurity.types$CyberSecTypes.html#spldoc_compilationunit__type__ProfilingDNSResponseMessageBase_t">ProfilingDNSResponseMessageBase_t</a></strong>: This type is part of the DPDNSResponseMessage_t type.
@@ -135,10 +135,10 @@
 </div>
 <div class="section">
 
-<p class="p">This type should be used the input type of the PredictiveBlacklistingFE operator.
+<p class="p">This type should be used the input type of the PredictiveBlocklistingFE operator.
 </p>
 
-<p class="p">Contains the set of attributes that are needed by the PredictiveBlacklistingFE operator. These attributes are populated by the following operators:
+<p class="p">Contains the set of attributes that are needed by the PredictiveBlocklistingFE operator. These attributes are populated by the following operators:
 </p>
 
 <div class="p">
@@ -169,7 +169,7 @@
 </div>
 <div class="section">
 
-<p class="p">This type is part of the PredictiveBlacklisting_t type. 
+<p class="p">This type is part of the PredictiveBlocklisting_t type. 
 </p>
 
 </div>
@@ -181,19 +181,19 @@
 
 </div>
 
-<div class="section" id="spldoc_compilationunit__type__PredictiveBlacklisting_t"><h2 class="title sectiontitle splpart">PredictiveBlacklisting_t</h2>
+<div class="section" id="spldoc_compilationunit__type__PredictiveBlocklisting_t"><h2 class="title sectiontitle splpart">PredictiveBlocklisting_t</h2>
   
 </div>
 <div class="section">
 
-<p class="p">This type should be used as the output type of the PredictiveBlacklistingFE operator and the input and output type of the PredictiveBlacklisting operator.  
+<p class="p">This type should be used as the output type of the PredictiveBlocklistingFE operator and the input and output type of the PredictiveBlocklisting operator.  
 </p>
 
 </div>
 
 <div class="section">
    <p class="p">
-<tt class="ph tt">PredictiveBlacklisting_t = PBFeatureVector_t featureVector, rstring domain, rstring predictedClass, float64 confidence;</tt>
+<tt class="ph tt">PredictiveBlocklisting_t = PBFeatureVector_t featureVector, rstring domain, rstring predictedClass, float64 confidence;</tt>
    </p>
 
 </div>
@@ -474,7 +474,7 @@
 
 <div class="section">
    <p class="p">
-<tt class="ph tt">BWListTag_e = enum { nonMatched, whiteList, blackList };</tt>
+<tt class="ph tt">BWListTag_e = enum { nonMatched, allowList, blockList };</tt>
    </p>
 
 </div>

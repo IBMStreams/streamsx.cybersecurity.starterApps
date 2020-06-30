@@ -7,22 +7,22 @@
 <meta name="copyright" content="(C) Copyright 2005"/>
 <meta name="DC.rights.owner" content="(C) Copyright 2005"/>
 <meta name="DC.Type" content="reference"/>
-<meta name="DC.Title" content="SPL File PredictiveBlacklistingBasic.spl"/>
+<meta name="DC.Title" content="SPL File PredictiveBlocklistingBasic.spl"/>
 <meta name="DC.Format" content="XHTML"/>
 <meta name="DC.Identifier" content="spldoc_compilationunit"/>
 <link rel="stylesheet" type="text/css" href="../../html/commonltr.css"/>
 <link rel="stylesheet" type="text/css" href="../../html/spldoc.css"/>
-<title>SPL File PredictiveBlacklistingBasic.spl</title>
+<title>SPL File PredictiveBlocklistingBasic.spl</title>
 </head>
 <body id="spldoc_compilationunit">
 
 
-<h1 class="title topictitle1">SPL File <tt class="ph tt">PredictiveBlacklistingBasic.spl</tt></h1>
+<h1 class="title topictitle1">SPL File <tt class="ph tt">PredictiveBlocklistingBasic.spl</tt></h1>
 
 <div class="body refbody">
 <div class="section">
 <p class="p">
-<a class="xref" href="../toolkits/toolkits.html">Toolkits</a> &gt; <a class="xref" href="tk$PredictiveBlacklistingSamples.html">PredictiveBlacklistingSamples 2.0.0</a> &gt; <a class="xref" href="ns$com.ibm.streamsx.cybersecurity.sample.html">com.ibm.streamsx.cybersecurity.sample</a> &gt; PredictiveBlacklistingBasic.spl</p>
+<a class="xref" href="../toolkits/toolkits.html">Toolkits</a> &gt; <a class="xref" href="tk$PredictiveBlocklistingSamples.html">PredictiveBlocklistingSamples 3.0.0</a> &gt; <a class="xref" href="ns$com.ibm.streamsx.cybersecurity.sample.html">com.ibm.streamsx.cybersecurity.sample</a> &gt; PredictiveBlocklistingBasic.spl</p>
 
 </div>
 
@@ -37,10 +37,10 @@
 
       <dd class="dd">
 <ul class="sl simple">
-<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.cybersecurity.sample$PredictiveBlacklistingBasic.html#spldoc_compilationunit__composite_operator__PBSrc">PBSrc</a></strong>
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.cybersecurity.sample$PredictiveBlocklistingBasic.html#spldoc_compilationunit__composite_operator__PBSrc">PBSrc</a></strong>
 </li>
 
-<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.cybersecurity.sample$PredictiveBlacklistingBasic.html#spldoc_compilationunit__composite_operator__PredictiveBlacklistingBasic">PredictiveBlacklistingBasic</a></strong>
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.cybersecurity.sample$PredictiveBlocklistingBasic.html#spldoc_compilationunit__composite_operator__PredictiveBlocklistingBasic">PredictiveBlocklistingBasic</a></strong>
 </li>
 
 </ul>
@@ -56,12 +56,12 @@
   
 </div>
 
-<div class="section" id="spldoc_compilationunit__composite_operator__PredictiveBlacklistingBasic"><h2 class="title sectiontitle splpart">composite PredictiveBlacklistingBasic</h2>
+<div class="section" id="spldoc_compilationunit__composite_operator__PredictiveBlocklistingBasic"><h2 class="title sectiontitle splpart">composite PredictiveBlocklistingBasic</h2>
   
 </div>
 
 <div class="section splgraph">
-  <embed class="image" src="../../image/tk$PredictiveBlacklistingSamples/op$com.ibm.streamsx.cybersecurity.sample$PredictiveBlacklistingBasic.svg" width="640" height="154"/>
+  <embed class="image" src="../../image/tk$PredictiveBlocklistingSamples/op$com.ibm.streamsx.cybersecurity.sample$PredictiveBlocklistingBasic.svg" width="640" height="154"/>
 </div>
 
 <div class="section">
@@ -81,7 +81,7 @@
 <div class="section">
    <pre class="pre codeblock">
 
- public composite PredictiveBlacklistingBasic
+ public composite PredictiveBlocklistingBasic
  {
  	graph
  		(stream&lt;PBDNSResponseMessage_t, tuple&lt;BWListTag_e domainTags,
@@ -91,10 +91,10 @@
  			param
  				domainAttr : questionName ;
  				ipAttr : concat(answerData, additionalData) ;
- 				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlackList.txt" ;
- 				blackIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlackList.txt" ;
- 				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/domainWhiteList.txt" ;
- 				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/ipWhiteList.txt" ;
+ 				blockDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlockList.txt" ;
+ 				blockIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlockList.txt" ;
+ 				allowDomainFile : getThisToolkitDir() + "/opt/bwlist/domainAllowList.txt" ;
+ 				allowIPFile : getThisToolkitDir() + "/opt/bwlist/ipAllowList.txt" ;
  			output
  				BWTagger_Stream : domainTags = getDomainTags()[0], ipTags = getIPTags() ;
  		}
@@ -106,17 +106,17 @@
  				onTuple BWTagger_Stream :
  				{
  					mutable BWListTag_e tag_ = nonMatched ;
- 					if(domainTags == blackList || has(ipTags, blackList))
+ 					if(domainTags == blockList || has(ipTags, blockList))
  					{
- 						tag_ = blackList ;
+ 						tag_ = blockList ;
  					}
  
- 					else if(domainTags == whiteList || has(ipTags, whiteList))
+ 					else if(domainTags == allowList || has(ipTags, allowList))
  					{
- 						tag_ = whiteList ;
+ 						tag_ = allowList ;
  					}
  
- 					if(tag_ != whiteList)
+ 					if(tag_ != allowList)
  					{
  						mutable BWFilter_Stream outTuple =(BWFilter_Stream) { } ;
  						assignFrom(outTuple, BWTagger_Stream) ;
@@ -163,9 +163,9 @@
  						asnInfoMatrix [ 0 ], additionalASNInfo = asnInfoMatrix [ 1 ] ;
  			}
  
- 		(stream&lt;PredictiveBlacklisting_t, PBFeatureExtractorInput_t&gt;
+ 		(stream&lt;PredictiveBlocklisting_t, PBFeatureExtractorInput_t&gt;
  			FeatureExtractor_Stream) as FeatureExtractor =
- 				PredictiveBlacklistingFE(TupleFormatter_Stream as inPort0Alias)
+ 				PredictiveBlocklistingFE(TupleFormatter_Stream as inPort0Alias)
  			{
  				output
  					FeatureExtractor_Stream : domain = TupleFormatter_Stream.questionName,
@@ -176,7 +176,7 @@
  			{
  				param
  					directory : getThisToolkitDir() + "/opt/" ;
- 					pattern : "predictive_blacklisting_sample.pcap" ;
+ 					pattern : "predictive_blocklisting_sample.pcap" ;
  			}
  
  		(stream&lt;rstring empty&gt; DirScanPlaceholder_Stream) as DirScanPlaceholder =
@@ -184,16 +184,16 @@
  			{
  			}
  
- 		(stream&lt;PredictiveBlacklisting_t, PBFeatureExtractorInput_t&gt;
- 			PredictiveBlacklistingOp_Stream) as PredictiveBlacklistingOp =
- 				PredictiveBlacklisting(FeatureExtractor_Stream ; DirScanPlaceholder_Stream)
+ 		(stream&lt;PredictiveBlocklisting_t, PBFeatureExtractorInput_t&gt;
+ 			PredictiveBlocklistingOp_Stream) as PredictiveBlocklistingOp =
+ 				PredictiveBlocklisting(FeatureExtractor_Stream ; DirScanPlaceholder_Stream)
  			{
  			}
  
- 		(stream&lt;PredictiveBlacklisting_t, PBFeatureExtractorInput_t&gt;
- 			Suspicious_Stream ; stream&lt;PredictiveBlacklisting_t,
+ 		(stream&lt;PredictiveBlocklisting_t, PBFeatureExtractorInput_t&gt;
+ 			Suspicious_Stream ; stream&lt;PredictiveBlocklisting_t,
  			PBFeatureExtractorInput_t&gt; Benign_Stream) as PredictionFilter =
- 				Filter(PredictiveBlacklistingOp_Stream)
+ 				Filter(PredictiveBlocklistingOp_Stream)
  			{
  				param
  					filter : predictedClass == "suspicious" ;
@@ -222,7 +222,7 @@
 </div>
 
 <div class="section splgraph">
-  <embed class="image" src="../../image/tk$PredictiveBlacklistingSamples/op$com.ibm.streamsx.cybersecurity.sample$PBSrc.svg" width="353" height="109"/>
+  <embed class="image" src="../../image/tk$PredictiveBlocklistingSamples/op$com.ibm.streamsx.cybersecurity.sample$PBSrc.svg" width="353" height="109"/>
 </div>
 
 <div class="section"><h2 class="title sectiontitle">Parameters</h2>

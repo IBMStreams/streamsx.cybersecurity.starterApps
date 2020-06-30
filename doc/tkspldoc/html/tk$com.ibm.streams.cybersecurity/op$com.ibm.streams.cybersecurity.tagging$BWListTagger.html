@@ -22,7 +22,7 @@
 <div class="body refbody">
 <div class="section">
 <p class="p">
-<a class="xref" href="../toolkits/toolkits.html">Toolkits</a> &gt; <a class="xref" href="tk$com.ibm.streams.cybersecurity.html">com.ibm.streams.cybersecurity 2.1.2</a> &gt; <a class="xref" href="ns$com.ibm.streams.cybersecurity.tagging.html">com.ibm.streams.cybersecurity.tagging</a> &gt; BWListTagger</p>
+<a class="xref" href="../toolkits/toolkits.html">Specialized toolkits</a> &gt; <a class="xref" href="tk$com.ibm.streams.cybersecurity.html">com.ibm.streams.cybersecurity 3.0.0</a> &gt; <a class="xref" href="ns$com.ibm.streams.cybersecurity.tagging.html">com.ibm.streams.cybersecurity.tagging</a> &gt; BWListTagger</p>
 
 </div>
 
@@ -32,7 +32,7 @@
 
 <div class="section">
 
-<p class="p">The BWListTagger operator loads lists of domains and IP addresses into a lookup table. When an IP or domain  is ingested, the operator checks if it appears in one of the lookup tables. If it does, the operator tags the IP or domain as either "blackList" or "whiteList", depending on which table it appeared in. If the IP or domain does not appear in either table,  it tags it as "nonMatched". 
+<p class="p">The BWListTagger operator loads lists of domains and IP addresses into a lookup table. When an IP or domain  is ingested, the operator checks if it appears in one of the lookup tables. If it does, the operator tags the IP or domain as either "blockList" or "allowList", depending on which table it appeared in. If the IP or domain does not appear in either table,  it tags it as "nonMatched". 
 </p>
 
 <p class="p">The operator is capable of dynamically updating (either adding to or removing from) the lookup tables via a control port. To update the lookup tables, submit a  tuple of type <tt class="ph tt">com.ibm.streams.cybersecurity.types::BWListUpdate_t</tt> to the control port. Once all updates have been submitted, a window punctuation must be  submitted to the control port in order to apply the changes.  
@@ -91,7 +91,7 @@
 
   <dd class="dd">This operator supports 7 parameters.
 <p class="p"> Optional: 
-<a class="xref" href="#spldoc_operator__parameter__blackDomainFile">blackDomainFile</a>, <a class="xref" href="#spldoc_operator__parameter__blackIPFile">blackIPFile</a>, <a class="xref" href="#spldoc_operator__parameter__domainAttr">domainAttr</a>, <a class="xref" href="#spldoc_operator__parameter__domainSearchAlgo">domainSearchAlgo</a>, <a class="xref" href="#spldoc_operator__parameter__ipAttr">ipAttr</a>, <a class="xref" href="#spldoc_operator__parameter__whiteDomainFile">whiteDomainFile</a>, <a class="xref" href="#spldoc_operator__parameter__whiteIPFile">whiteIPFile</a>
+<a class="xref" href="#spldoc_operator__parameter__allowDomainFile">allowDomainFile</a>, <a class="xref" href="#spldoc_operator__parameter__allowIPFile">allowIPFile</a>, <a class="xref" href="#spldoc_operator__parameter__blockDomainFile">blockDomainFile</a>, <a class="xref" href="#spldoc_operator__parameter__blockIPFile">blockIPFile</a>, <a class="xref" href="#spldoc_operator__parameter__domainAttr">domainAttr</a>, <a class="xref" href="#spldoc_operator__parameter__domainSearchAlgo">domainSearchAlgo</a>, <a class="xref" href="#spldoc_operator__parameter__ipAttr">ipAttr</a>
 
 </p>
 </dd>
@@ -250,11 +250,11 @@
 
                         
               <dt class="dt dlterm">
-                <tt class="ph tt">   list&lt;enum{nonMatched,whiteList,blackList}&gt; getDomainTags()</tt>              </dt>
+                <tt class="ph tt">   list&lt;enum{nonMatched,allowList,blockList}&gt; getDomainTags()</tt>              </dt>
 
             <dd class="dd">
 
-<p class="p">Returns the black and white list tags for each domain in the <strong class="ph b">domainAttr</strong> parameter. If the <strong class="ph b">domainAttr</strong> parameter refers to an input attribute of type  <tt class="ph tt">rstring</tt>, then this output function returns a type of <tt class="ph tt">BWListTag_e</tt>. If the <strong class="ph b">domainAttr</strong> parameter refers to an input attribute of <tt class="ph tt">list&lt;rstring&gt;</tt>, then this output function returns a type of <tt class="ph tt">list&lt;BWListTag_e&gt;</tt>. The possible enum values that are returned from this function are: <tt class="ph tt">nonMatched</tt>, <tt class="ph tt">whiteList</tt> and <tt class="ph tt">blackListDomain</tt>.
+<p class="p">Returns the block and allow list tags for each domain in the <strong class="ph b">domainAttr</strong> parameter. If the <strong class="ph b">domainAttr</strong> parameter refers to an input attribute of type  <tt class="ph tt">rstring</tt>, then this output function returns a type of <tt class="ph tt">BWListTag_e</tt>. If the <strong class="ph b">domainAttr</strong> parameter refers to an input attribute of <tt class="ph tt">list&lt;rstring&gt;</tt>, then this output function returns a type of <tt class="ph tt">list&lt;BWListTag_e&gt;</tt>. The possible enum values that are returned from this function are: <tt class="ph tt">nonMatched</tt>, <tt class="ph tt">allowList</tt> and <tt class="ph tt">blockListDomain</tt>.
 </p>
               <p class="p"/>
 
@@ -262,11 +262,11 @@
 
                         
               <dt class="dt dlterm">
-                <tt class="ph tt">   list&lt;enum{nonMatched,whiteList,blackList}&gt; getIPTags()</tt>              </dt>
+                <tt class="ph tt">   list&lt;enum{nonMatched,allowList,blockList}&gt; getIPTags()</tt>              </dt>
 
             <dd class="dd">
 
-<p class="p">Returns the black and white list tags for each IP in the <strong class="ph b">ipAttr</strong> parameter. If the <strong class="ph b">ipAttr</strong> parameter refers to an input attribute of type  <tt class="ph tt">rstring</tt>, then this output function returns a type of <tt class="ph tt">BWListTag_e</tt>. If the <strong class="ph b">ipAttr</strong> parameter refers to an input attribute of <tt class="ph tt">list&lt;rstring&gt;</tt>, then this output function returns a type of <tt class="ph tt">list&lt;BWListTag_e&gt;</tt>. The possible enum values that are returned from this function are: <tt class="ph tt">nonMatched</tt>, <tt class="ph tt">whiteList</tt> and <tt class="ph tt">blackListDomain</tt>.
+<p class="p">Returns the block and allow list tags for each IP in the <strong class="ph b">ipAttr</strong> parameter. If the <strong class="ph b">ipAttr</strong> parameter refers to an input attribute of type  <tt class="ph tt">rstring</tt>, then this output function returns a type of <tt class="ph tt">BWListTag_e</tt>. If the <strong class="ph b">ipAttr</strong> parameter refers to an input attribute of <tt class="ph tt">list&lt;rstring&gt;</tt>, then this output function returns a type of <tt class="ph tt">list&lt;BWListTag_e&gt;</tt>. The possible enum values that are returned from this function are: <tt class="ph tt">nonMatched</tt>, <tt class="ph tt">allowList</tt> and <tt class="ph tt">blockListDomain</tt>.
 </p>
               <p class="p"/>
 
@@ -274,7 +274,7 @@
 
                         
               <dt class="dt dlterm">
-                <tt class="ph tt">   list&lt;enum{nonMatched,whiteList,blackList}&gt; getAllTags()</tt>              </dt>
+                <tt class="ph tt">   list&lt;enum{nonMatched,allowList,blockList}&gt; getAllTags()</tt>              </dt>
 
             <dd class="dd">
               <p class="p"/>
@@ -339,15 +339,15 @@
 
 
 <p class="p"> Optional: 
-<a class="xref" href="#spldoc_operator__parameter__blackDomainFile">blackDomainFile</a>, <a class="xref" href="#spldoc_operator__parameter__blackIPFile">blackIPFile</a>, <a class="xref" href="#spldoc_operator__parameter__domainAttr">domainAttr</a>, <a class="xref" href="#spldoc_operator__parameter__domainSearchAlgo">domainSearchAlgo</a>, <a class="xref" href="#spldoc_operator__parameter__ipAttr">ipAttr</a>, <a class="xref" href="#spldoc_operator__parameter__whiteDomainFile">whiteDomainFile</a>, <a class="xref" href="#spldoc_operator__parameter__whiteIPFile">whiteIPFile</a>
+<a class="xref" href="#spldoc_operator__parameter__allowDomainFile">allowDomainFile</a>, <a class="xref" href="#spldoc_operator__parameter__allowIPFile">allowIPFile</a>, <a class="xref" href="#spldoc_operator__parameter__blockDomainFile">blockDomainFile</a>, <a class="xref" href="#spldoc_operator__parameter__blockIPFile">blockIPFile</a>, <a class="xref" href="#spldoc_operator__parameter__domainAttr">domainAttr</a>, <a class="xref" href="#spldoc_operator__parameter__domainSearchAlgo">domainSearchAlgo</a>, <a class="xref" href="#spldoc_operator__parameter__ipAttr">ipAttr</a>
 
 </p>
 <dl class="dl">
   
-     <dt class="dt dlterm"><a name="spldoc_operator__parameter__blackDomainFile"><!-- --></a><tt class="ph tt">blackDomainFile</tt></dt>
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__allowDomainFile"><!-- --></a><tt class="ph tt">allowDomainFile</tt></dt>
 
      <dd class="dd">
-<p class="p">A path to the file containing a list of black-listed domains. This file should contain a single domain per line. Relative paths are relative to the data directory. This parameter should not be used  if input port 2 is defined.
+<p class="p">A path to the file containing a list of white-listed domains. This file should contain a single domain per line. Relative paths are relative to the data directory. This parameter should not be used  if input port 3 is defined.
 </p>
 
   <dl class="dl">
@@ -376,10 +376,74 @@
 
   
   
-     <dt class="dt dlterm"><a name="spldoc_operator__parameter__blackIPFile"><!-- --></a><tt class="ph tt">blackIPFile</tt></dt>
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__allowIPFile"><!-- --></a><tt class="ph tt">allowIPFile</tt></dt>
 
      <dd class="dd">
-<p class="p">A path to the file containing a list of black-listed IP addresses. This file should contain a single IPv4 address per line. Relative paths are relative to the data directory. This parameter should not be used  if input port 1 is defined.
+<p class="p">A path to the file containing a list of white-listed IP addresses. This file should contain a single IPv4 address per line. Relative paths are relative to the data directory. This parameter should not be used  if input port 4 is defined.
+</p>
+
+  <dl class="dl">
+    
+     <dt class="dt dlterm">Properties</dt>
+
+     <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: AttributeFree
+     </li>
+
+   </ul>
+
+     <p class="p"/>
+     </dd>
+
+    
+  </dl>
+
+     </dd>
+
+  
+  
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__blockDomainFile"><!-- --></a><tt class="ph tt">blockDomainFile</tt></dt>
+
+     <dd class="dd">
+<p class="p">A path to the file containing a list of block-listed domains. This file should contain a single domain per line. Relative paths are relative to the data directory. This parameter should not be used  if input port 2 is defined.
+</p>
+
+  <dl class="dl">
+    
+     <dt class="dt dlterm">Properties</dt>
+
+     <dd class="dd">   <ul class="sl simple">
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
+     </li>
+
+     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: AttributeFree
+     </li>
+
+   </ul>
+
+     <p class="p"/>
+     </dd>
+
+    
+  </dl>
+
+     </dd>
+
+  
+  
+     <dt class="dt dlterm"><a name="spldoc_operator__parameter__blockIPFile"><!-- --></a><tt class="ph tt">blockIPFile</tt></dt>
+
+     <dd class="dd">
+<p class="p">A path to the file containing a list of block-listed IP addresses. This file should contain a single IPv4 address per line. Relative paths are relative to the data directory. This parameter should not be used  if input port 1 is defined.
 </p>
 
   <dl class="dl">
@@ -443,10 +507,10 @@
      <dt class="dt dlterm"><a name="spldoc_operator__parameter__domainSearchAlgo"><!-- --></a><tt class="ph tt">domainSearchAlgo</tt></dt>
 
      <dd class="dd">
-<p class="p">Specifies the algorithm to use when searching for domains in the lookup table. Valid values are <tt class="ph tt">exact</tt> and <tt class="ph tt">iterative</tt>. When <tt class="ph tt">exact</tt> is specified,  the operator will try to find an exact match for the domain in the lookup domain. For example, assume the domain "ibm.com" is added to the domain whiteList. In this case, <strong class="ph b">only</strong> incoming domains with the value "ibm.com" will be tagged. Any other domains (i.e. "us.ibm.com") will be tagged as "nonMatched". 
+<p class="p">Specifies the algorithm to use when searching for domains in the lookup table. Valid values are <tt class="ph tt">exact</tt> and <tt class="ph tt">iterative</tt>. When <tt class="ph tt">exact</tt> is specified,  the operator will try to find an exact match for the domain in the lookup domain. For example, assume the domain "ibm.com" is added to the domain allowList. In this case, <strong class="ph b">only</strong> incoming domains with the value "ibm.com" will be tagged. Any other domains (i.e. "us.ibm.com") will be tagged as "nonMatched". 
 </p>
 
-<p class="p">When <tt class="ph tt">iterative</tt> is specified, the operator will continuously remove labels from the from of the domain until a match is found. This is useful if you  want to add a second-level domain to the lookup table and have the operator tag domains with any number of labels. For example, assume the domain  "ibm.com" is added to the domain whiteList. In this case, all of the following domains will be tagged as "whiteList": 'ibm.com', 'streams.ibm.com', 'a.b.c.ibm.com'.
+<p class="p">When <tt class="ph tt">iterative</tt> is specified, the operator will continuously remove labels from the from of the domain until a match is found. This is useful if you  want to add a second-level domain to the lookup table and have the operator tag domains with any number of labels. For example, assume the domain  "ibm.com" is added to the domain allowList. In this case, all of the following domains will be tagged as "allowList": 'ibm.com', 'streams.ibm.com', 'a.b.c.ibm.com'.
 </p>
 
   <dl class="dl">
@@ -496,70 +560,6 @@
      </li>
 
      <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: Expression
-     </li>
-
-   </ul>
-
-     <p class="p"/>
-     </dd>
-
-    
-  </dl>
-
-     </dd>
-
-  
-  
-     <dt class="dt dlterm"><a name="spldoc_operator__parameter__whiteDomainFile"><!-- --></a><tt class="ph tt">whiteDomainFile</tt></dt>
-
-     <dd class="dd">
-<p class="p">A path to the file containing a list of white-listed domains. This file should contain a single domain per line. Relative paths are relative to the data directory. This parameter should not be used  if input port 3 is defined.
-</p>
-
-  <dl class="dl">
-    
-     <dt class="dt dlterm">Properties</dt>
-
-     <dd class="dd">   <ul class="sl simple">
-     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
-     </li>
-
-     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
-     </li>
-
-     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: AttributeFree
-     </li>
-
-   </ul>
-
-     <p class="p"/>
-     </dd>
-
-    
-  </dl>
-
-     </dd>
-
-  
-  
-     <dt class="dt dlterm"><a name="spldoc_operator__parameter__whiteIPFile"><!-- --></a><tt class="ph tt">whiteIPFile</tt></dt>
-
-     <dd class="dd">
-<p class="p">A path to the file containing a list of white-listed IP addresses. This file should contain a single IPv4 address per line. Relative paths are relative to the data directory. This parameter should not be used  if input port 4 is defined.
-</p>
-
-  <dl class="dl">
-    
-     <dt class="dt dlterm">Properties</dt>
-
-     <dd class="dd">   <ul class="sl simple">
-     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__cardinality">Cardinality</a>: 1
-     </li>
-
-     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__optional">Optional</a>: true
-     </li>
-
-     <li class="sli"><a class="xref" href="../references/OperatorModel.html#spldoc_reference_operator_model__parameters__parameter__expressionmode">ExpressionMode</a>: AttributeFree
      </li>
 
    </ul>
