@@ -17,8 +17,8 @@
 	<property name="maxmind.file" value="${data.dir}/maxmind.tar.gz" />
 
 	<property name="sample.namespace" value="com.ibm.streamsx.cybersecurity.sample" />
-	<property name="sample.maincomp.basic" value="PredictiveBlacklistingBasic" />
-	<property name="sample.maincomp.extended" value="PredictiveBlacklistingExtended" />
+	<property name="sample.maincomp.basic" value="PredictiveBlocklistingBasic" />
+	<property name="sample.maincomp.extended" value="PredictiveBlocklistingExtended" />
 
 	<target name="all" depends="init,compileAll" />
 
@@ -31,19 +31,23 @@
 
 	<target name="compileAll" depends="indexToolkit">
 		<antcall target="compile">
-			<param name="mainComp" value="PredictiveBlacklistingBasic" />
+			<param name="mainComp" value="PredictiveBlocklistingBasic" />
 		</antcall>
 	</target>
 
 	<target name="compile" depends="indexToolkit">
 		<fail unless="env.STREAMS_INSTALL" message="STREAMS_INSTALL not set." />
-		<fail message="Property &quot;spss.toolkit.path&quot; need to be set to the absolute path containing the 'com.ibm.spss.streams.analytics' toolkit" unless="spss.toolkit.path" />
+		<fail message="Property &quot;spss.toolkit&quot; need to be set to the absolute path containing the 'com.ibm.spss.streams.analytics' toolkit" unless="spss.toolkit" />
+		<property name="cybersecurity.toolkit" location="${env.STREAMS_INSTALL}/toolkits/com.ibm.streams.cybersecurity" />
+		<property name="network.toolkit" location="${env.STREAMS_INSTALL}/toolkits/com.ibm.streamsx.network" />
+		<echo message="cybersecurity toolkit: ${cybersecurity.toolkit}"/>
+		<echo message="network toolkit: ${network.toolkit}"/>
 		<echo message="Compiling ${mainComp} application..." />
  		<exec executable="${streams.install}/bin/sc">
 			<arg value="-M" />
 			<arg value="${sample.namespace}::${mainComp}" />
 			<arg value="-t" />
-			<arg value="${spss.toolkit.path}:${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${streams.toolkit.dir}/com.ibm.streamsx.network" />
+			<arg value="${spss.toolkit}:${cybersecurity.toolkit}:${network.toolkit}" />
 			<arg value="--output-dir=output/${mainComp}_Output" />
 		</exec>
 	</target>
@@ -101,25 +105,25 @@
 
 	<target name="standalone">
 		<echo message="Launch application in standalone mode ..." />
-		<exec executable="./output/PredictiveBlacklistingBasic_Output/bin/standalone">
+		<exec executable="./output/PredictiveBlocklistingBasic_Output/bin/standalone">
 		</exec>
 	</target>
 
 	<target name="buildAndSubmitRemote">
-		<echo message="Build PredictiveBlacklistingBasic application..." />
+		<echo message="Build PredictiveBlocklistingBasic application..." />
 		<exec executable="streamsx-sc">
 			<arg value="--disable-ssl-verify" />
 			<arg value="--main-composite" />
-			<arg value="com.ibm.streamsx.cybersecurity.sample::PredictiveBlacklistingBasic" />
+			<arg value="com.ibm.streamsx.cybersecurity.sample::PredictiveBlocklistingBasic" />
 			<arg value="--spl-path" />
 			<arg value="${spss.toolkit.path}" />
 
 		</exec>
-		<echo message="Submit PredictiveBlacklistingBasic application..." />
+		<echo message="Submit PredictiveBlocklistingBasic application..." />
 		<exec executable="streamsx-streamtool">
 			<arg value="--disable-ssl-verify" />
 			<arg value="submitjob" />
-			<arg value="output/com.ibm.streamsx.cybersecurity.sample.PredictiveBlacklistingBasic.sab" />
+			<arg value="output/com.ibm.streamsx.cybersecurity.sample.PredictiveBlocklistingBasic.sab" />
 		</exec>
 	</target>
 

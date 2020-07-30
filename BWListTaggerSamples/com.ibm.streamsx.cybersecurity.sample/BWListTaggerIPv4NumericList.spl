@@ -29,10 +29,10 @@ public composite BWListTaggerIPv4NumericList
 		{
 			param
 				ipAttr : ips ;
-				blackIPFile : getThisToolkitDir() + "/opt/bwlist/IPBlackList.txt" ;
-				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/IPWhiteList.txt" ;
-				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsBlackList.txt" ;
-				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsWhiteList.txt" ;
+				blockIPFile : getThisToolkitDir() + "/opt/bwlist/IPBlockList.txt" ;
+				allowIPFile : getThisToolkitDir() + "/opt/bwlist/IPAllowList.txt" ;
+				blockDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsBlockList.txt" ;
+				allowDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsAllowList.txt" ;
 			output
 				TaggedStream : ipTags = getIPTags() ;
 		}

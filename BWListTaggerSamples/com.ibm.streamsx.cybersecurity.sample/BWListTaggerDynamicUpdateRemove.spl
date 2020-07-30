@@ -21,10 +21,10 @@ public composite BWListTaggerDynamicUpdateRemove
 		{
 			param
 				domainAttr : domains ;
-				blackIPFile : getThisToolkitDir() + "/opt/bwlist/IPBlackList.txt" ;
-				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/IPWhiteList.txt" ;
-				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsBlackList.txt" ;
-				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsWhiteList.txt" ;
+				blockIPFile : getThisToolkitDir() + "/opt/bwlist/IPBlockList.txt" ;
+				allowIPFile : getThisToolkitDir() + "/opt/bwlist/IPAllowList.txt" ;
+				blockDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsBlockList.txt" ;
+				allowDomainFile : getThisToolkitDir() + "/opt/bwlist/DomainsAllowList.txt" ;
 			output
 				TaggedStream : domainTags = getDomainTags()[0] ;
 		}
@@ -61,9 +61,9 @@ public composite BWListTaggerDynamicUpdateRemove
 				}
 
 			output
-				UpdateSrcStream : action = remove, // "remove" the domains from either the blacklist or whitelist
-				listTag =(size(regexMatch(filename_, "BlackList")) > 0) ? blackList
-					:((size(regexMatch(filename_, "WhiteList")) > 0) ? whiteList :
+				UpdateSrcStream : action = remove, // "remove" the domains from either the blockList or allowList
+				listTag =(size(regexMatch(filename_, "BlockList")) > 0) ? blockList
+					:((size(regexMatch(filename_, "AllowList")) > 0) ? allowList :
 					nonMatched) ;
 		}
 

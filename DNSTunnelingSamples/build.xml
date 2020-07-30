@@ -26,12 +26,16 @@
 
 	<target name="compile" depends="indexToolkit">
 		<fail unless="env.STREAMS_INSTALL" message="STREAMS_INSTALL not set." />
+		<property name="cybersecurity.toolkit" location="${env.STREAMS_INSTALL}/toolkits/com.ibm.streams.cybersecurity" />
+		<property name="network.toolkit" location="${env.STREAMS_INSTALL}/toolkits/com.ibm.streamsx.network" />
+		<echo message="cybersecurity toolkit: ${cybersecurity.toolkit}"/>
+		<echo message="network toolkit: ${network.toolkit}"/>
 		<echo message="Compiling ${mainComp} application..." />
 		<exec executable="${streams.install}/bin/sc">
 			<arg value="-M" />
 			<arg value="${sample.namespace}::${mainComp}" />
 			<arg value="-t" />
-			<arg value="${streams.toolkit.dir}/com.ibm.streams.cybersecurity:${streams.toolkit.dir}/com.ibm.streamsx.network" />
+			<arg value="${cybersecurity.toolkit}:${network.toolkit}" />
 			<arg value="--output-dir=output/${mainComp}_Output" />
 		</exec>
 	</target>

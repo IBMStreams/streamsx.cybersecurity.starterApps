@@ -1,16 +1,16 @@
 namespace com.ibm.streamsx.cybersecurity.sample ;
 
 use com.ibm.streams.cybersecurity.tagging::BWListTagger ;
-use com.ibm.streams.cybersecurity.analytics::PredictiveBlacklisting ;
+use com.ibm.streams.cybersecurity.analytics::PredictiveBlocklisting ;
 use com.ibm.streams.cybersecurity.types::* ;
 use com.ibm.streamsx.network.enrichment::* ;
-use com.ibm.streams.cybersecurity.extractors::PredictiveBlacklistingFE ;
+use com.ibm.streams.cybersecurity.extractors::PredictiveBlocklistingFE ;
 use com.ibm.streamsx.network.parse::* ;
 use com.ibm.streamsx.network.source::* ;
 use com.ibm.streamsx.network.ipv4::* ;
 use com.ibm.streamsx.network.enrichment::IPLocationMatrix_t ;
 
-public composite PredictiveBlacklistingBasic
+public composite PredictiveBlocklistingBasic
 {
 	graph
 		(stream<PBDNSResponseMessage_t, tuple<BWListTag_e domainTags,
@@ -20,10 +20,10 @@ public composite PredictiveBlacklistingBasic
 			param
 				domainAttr : questionName ;
 				ipAttr : concat(answerData, additionalData) ;
-				blackDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlackList.txt" ;
-				blackIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlackList.txt" ;
-				whiteDomainFile : getThisToolkitDir() + "/opt/bwlist/domainWhiteList.txt" ;
-				whiteIPFile : getThisToolkitDir() + "/opt/bwlist/ipWhiteList.txt" ;
+				blockDomainFile : getThisToolkitDir() + "/opt/bwlist/domainBlockList.txt" ;
+				blockIPFile : getThisToolkitDir() + "/opt/bwlist/ipBlockList.txt" ;
+				allowDomainFile : getThisToolkitDir() + "/opt/bwlist/domainAllowList.txt" ;
+				allowIPFile : getThisToolkitDir() + "/opt/bwlist/ipAllowList.txt" ;
 			output
 				BWTagger_Stream : domainTags = getDomainTags()[0], ipTags = getIPTags() ;
 		}
@@ -35,17 +35,17 @@ public composite PredictiveBlacklistingBasic
 				onTuple BWTagger_Stream :
 				{
 					mutable BWListTag_e tag_ = nonMatched ;
-					if(domainTags == blackList || has(ipTags, blackList))
+					if(domainTags == blockList || has(ipTags, blockList))
 					{
-						tag_ = blackList ;
+						tag_ = blockList ;
 					}
 
-					else if(domainTags == whiteList || has(ipTags, whiteList))
+					else if(domainTags == allowList || has(ipTags, allowList))
 					{
-						tag_ = whiteList ;
+						tag_ = allowList ;
 					}
 
-					if(tag_ != whiteList)
+					if(tag_ != allowList)
 					{
 						mutable BWFilter_Stream outTuple =(BWFilter_Stream) { } ;
 						assignFrom(outTuple, BWTagger_Stream) ;
@@ -92,9 +92,9 @@ public composite PredictiveBlacklistingBasic
 						asnInfoMatrix [ 0 ], additionalASNInfo = asnInfoMatrix [ 1 ] ;
 			}
 
-		(stream<PredictiveBlacklisting_t, PBFeatureExtractorInput_t>
+		(stream<PredictiveBlocklisting_t, PBFeatureExtractorInput_t>
 			FeatureExtractor_Stream) as FeatureExtractor =
-				PredictiveBlacklistingFE(TupleFormatter_Stream as inPort0Alias)
+				PredictiveBlocklistingFE(TupleFormatter_Stream as inPort0Alias)
 			{
 				output
 					FeatureExtractor_Stream : domain = TupleFormatter_Stream.questionName,
@@ -105,7 +105,7 @@ public composite PredictiveBlacklistingBasic
 			{
 				param
 					directory : getThisToolkitDir() + "/opt/" ;
-					pattern : "predictive_blacklisting_sample.pcap" ;
+					pattern : "predictive_blocklisting_sample.pcap" ;
 			}
 
 		(stream<rstring empty> DirScanPlaceholder_Stream) as DirScanPlaceholder =
@@ -113,16 +113,16 @@ public composite PredictiveBlacklistingBasic
 			{
 			}
 
-		(stream<PredictiveBlacklisting_t, PBFeatureExtractorInput_t>
-			PredictiveBlacklistingOp_Stream) as PredictiveBlacklistingOp =
-				PredictiveBlacklisting(FeatureExtractor_Stream ; DirScanPlaceholder_Stream)
+		(stream<PredictiveBlocklisting_t, PBFeatureExtractorInput_t>
+			PredictiveBlocklistingOp_Stream) as PredictiveBlocklistingOp =
+				PredictiveBlocklisting(FeatureExtractor_Stream ; DirScanPlaceholder_Stream)
 			{
 			}
 
-		(stream<PredictiveBlacklisting_t, PBFeatureExtractorInput_t>
-			Suspicious_Stream ; stream<PredictiveBlacklisting_t,
+		(stream<PredictiveBlocklisting_t, PBFeatureExtractorInput_t>
+			Suspicious_Stream ; stream<PredictiveBlocklisting_t,
 			PBFeatureExtractorInput_t> Benign_Stream) as PredictionFilter =
-				Filter(PredictiveBlacklistingOp_Stream)
+				Filter(PredictiveBlocklistingOp_Stream)
 			{
 				param
 					filter : predictedClass == "suspicious" ;
