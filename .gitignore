@@ -2,7 +2,6 @@
 *.sublime-project
 *.sublime-workspace
 .bundle
-.DS_Store
 .jekyll-metadata
 .sass-cache
 _asset_bundler_cache
@@ -13,3 +12,5 @@ Gemfile.lock
 node_modules
 npm-debug.log*
 /.project
+.DS_Store
+/**/.DS_Store
