@@ -31,4 +31,4 @@ For information on how to get started with the cybersecurity toolkit, see the fo
 
 To learn more about Streams:
 * [IBM Streams on Github](http://ibmstreams.github.io)
-* [StreamsDev](https://developer.ibm.com/streamsdev/)
+
