@@ -2,7 +2,7 @@
 title: "Toolkit Usage Overview"
 permalink: /docs/user/overview/
 excerpt: "How to use this toolkit."
-last_modified_at: 2017-08-04T12:37:48-04:00
+last_modified_at: 2020-08-17T08:37:48-04:00
 redirect_from:
    - /theme-setup/
 sidebar:
@@ -18,6 +18,11 @@ In order to get started with using the Cybersecurity Toolkit, it is highly recom
 * DomainProfiling - Detects suspicious behaviour based on profiles built using domains found in DNS response traffic.
 * HostProfiling - Detects suspicious behaviour based on profiles built using hosts found in DNS response traffic.
 * PredictiveBlocklisting - Predicts where a domain should be added to a blocklist.
+
+## Getting Started
+
+For information on how to get started with the cybersecurity toolkit, see the following link:
+[http://ibmstreams.github.io/streamsx.documentation/docs/4.2/cybersecurity/cybersecurity-getting-started/](http://ibmstreams.github.io/streamsx.documentation/docs/4.2/cybersecurity/cybersecurity-getting-started/)
 
 
 ## SPLDOC

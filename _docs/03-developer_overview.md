@@ -2,7 +2,7 @@
 title: "Toolkit Development overview"
 permalink: /docs/developer/overview/
 excerpt: "Contributing to this toolkits development."
-last_modified_at: 2017-08-04T12:37:48-04:00
+last_modified_at: 2020-08-17T08:37:48-04:00
 redirect_from:
    - /theme-setup/
 sidebar:
@@ -26,5 +26,5 @@ run `ant buildAndSubmitRemote`
 
 ## Cybersecurity Toolkit - Getting Started
 For information on how to get started with the cybersecurity toolkit, see the following link:
-[http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/)
+[http://ibmstreams.github.io/streamsx.documentation/docs/4.2/cybersecurity/cybersecurity-getting-started/](http://ibmstreams.github.io/streamsx.documentation/docs/4.2/cybersecurity/cybersecurity-getting-started/)
 
