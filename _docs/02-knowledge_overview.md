@@ -2,7 +2,7 @@
 title: "Toolkit technical background overview"
 permalink: /docs/knowledge/overview/
 excerpt: "Basic knowledge of the toolkits technical domain."
-last_modified_at: 2017-08-04T12:37:48-04:00
+last_modified_at: 2020-08-17T08:37:48-04:00
 redirect_from:
    - /theme-setup/
 sidebar:
@@ -12,9 +12,6 @@ sidebar:
 {% include editme %}
 
 ## Cybersecurity Toolkit - Introduction
-
-[https://developer.ibm.com/streamsdev/docs/detect-active-threats-real-time-streams-cybersecurity-toolkit/](https://developer.ibm.com/streamsdev/docs/detect-active-threats-real-time-streams-cybersecurity-toolkit/)
-
 
 While the World Wide Web may only be 25 years old, cybersecurity attacks have been occurring for more than a century. One of the earliest cyberattacks can be traced back to 1903 when a hacker interrupted a public demonstration of a wireless telegraph machine by sending Morse code insults. Even 100 years ago, hackers were exploiting security holes for the public good. (Dot-dash-diss: The gentleman hacker's 1903 lulz)
 
