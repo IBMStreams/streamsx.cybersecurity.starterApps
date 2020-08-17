@@ -26,7 +26,7 @@ run `ant buildAndSubmitRemote`
 ## Cybersecurity Toolkit - Getting Started
 
 For information on how to get started with the cybersecurity toolkit, see the following link:
-* [Detect Active Threats in Real-time: Streams Cybersecurity Toolkit](https://developer.ibm.com/streamsdev/docs/detect-active-threats-real-time-streams-cybersecurity-toolkit/)
+* [Detect Active Threats in Real-time: Streams Cybersecurity Toolkit](https://ibmstreams.github.io/streamsx.cybersecurity.starterApps/docs/knowledge/overview/)
 * [Getting Started](http://ibmstreams.github.io/streamsx.documentation/docs/4.1/cybersecurity/cybersecurity-getting-started/)
 
 To learn more about Streams:
